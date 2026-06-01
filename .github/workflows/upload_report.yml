@@ -1,3 +1,5 @@
+# Please note that this file was written with the help of Qwen3.6-Plus
+
 name: Build and Upload Typst Thesis Using the Nix Flake
 
 on:
@@ -8,6 +10,8 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    permissions:
+          contents: write
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -28,3 +32,23 @@ jobs:
         with:
           name: bachelor-thesis-pdf
           path: output/bachelor_thesis.pdf
+
+      - name: Update Latest Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: thesis-latest
+          name: Latest Thesis
+          body: Always points to the most recent successful build.
+          files: output/bachelor_thesis.pdf
+          draft: false
+          make_latest: true
+
+      - name: Archive Versioned Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: thesis-build-${{ github.run_number }}
+          name: Thesis Build #${{ github.run_number }}
+          body: Historical snapshot from commit ${{ github.sha }}
+          files: output/bachelor_thesis.pdf
+          draft: false
+          make_latest: false
