@@ -1,0 +1,30 @@
+name: Build and Upload Typst Thesis Using the Nix Flake
+
+on:
+  push:
+    branches: ["main"]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install Nix
+        uses: DeterminateSystems/nix-installer-action@main
+
+      - name: Enable Magic Nix Cache
+        uses: DeterminateSystems/magic-nix-cache-action@main
+
+      - name: Build Thesis via Nix Flake
+        run: |
+          mkdir -p output
+          nix develop --command typst compile bachelor_thesis.typ output/bachelor_thesis.pdf
+
+      - name: Upload PDF as Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: bachelor-thesis-pdf
+          path: output/bachelor_thesis.pdf
