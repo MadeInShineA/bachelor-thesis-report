@@ -1,0 +1,3 @@
+[submodule "isc-hei-typst-templates"]
+	path = isc-hei-typst-templates
+	url = git@github.com:MadeInShineA/isc-hei-typst-templates.git
