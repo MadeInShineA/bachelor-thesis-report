@@ -1,37 +1,36 @@
-#import "@preview/isc-hei-bthesis:0.7.1" : *
+#import "isc-hei-typst-templates/isc_templates.typ":*
 
-#let doc_language = "fr" // Valid values are en, fr
+#let doc_language = "en" // Valid values are en, fr
 
-#show: project.with( 
-  title: "Life, the Universe, and Everything", // Your thesis title
-  subtitle: "An exploration of the intersection between computer science and engineering, focusing on their impact on modern technological advancements.", // Optional, use none if not needed
-  authors: "James Gosling", 
+#show: project.with(
+  title: "Numerical Stability of fMRIPrep Outputs and Its Impact on Functional Connectivity Biomarkers", // Your thesis title
+  subtitle: none, // Optional, use none if not needed
+  authors: "Olivier Amacker",
   language: doc_language, // must be defined globally, see above
-  
-  thesis-supervisor: "Prof. Dr John von Neumann", 
-  thesis-co-supervisor: "Lady Ada Lovelace", // Optional, use none if not needed
-  thesis-expert: "Dr Grace Hopper", // Optional, use none if not needed
-  thesis-id: "ISC-ID-26-1", // Your thesis ID (from the official project description)
-  project-repos: "https://isc.hevs.ch", // Your project git repository.
 
-  school: "Haute École d'Ingénierie de Sion", 
+  thesis-supervisor: "Prof. Dr Oscar Esteban",
+  thesis-co-supervisor: "Dr Okito Yamashita", // Optional, use none if not needed
+  thesis-expert: "Dr Ayumu Yamashita", // Optional, use none if not needed
+  thesis-id: "ISC-ID-26-1", // Your thesis ID (from the official project description)
+  project-repos: "https://github.com/madeinshinea/bachelor-thesis", // Your project git repository.
+
+  school: "Haute École d'Ingénierie de Sion",
   programme: "Informatique et Systèmes de communication (ISC)",
 
   // Some keywords related to your thesis
-  keywords: ("engineering", "data", "machine learning", "meteorology"),
+  keywords: ("medical data science", "FMRI", "fMRIPrep", "numerical stability", "benchmark"),
   major : "Data engineering", // "Software engineering", "Embedded systems", "Security", "something else"
 
-  date: datetime(year: 2026, month: 6, day: 30), // or datetime.today() 
+  date: datetime.today(), // or datetime.today()
 
   doc-type: "thesis",
-  fancy-chapter-rule: true,
   split-chapters: true,
-  revision: "1.0", // Or for instance "1.0", for the version of your thesis  
+  revision: "0.0.1", // Or for instance "1.0", for the version of your thesis
   code-theme: "bluloco-light", // See directory themes/ for available themes
-) 
+)
 
-// // If using acronyms 
-#import "@preview/acrostiche:0.7.0": *     
+// // If using acronyms
+#import "@preview/acrostiche:0.7.0": *
 #include "acronyms.typ"
 
 // Let's get started folks!
@@ -52,7 +51,7 @@
 #cleardoublepage()
 #include "pages/acknowledgements.typ"
 
-= Writing a thesis 
+= Writing a thesis
 
 // Enable headers and footers from this point on
 #set-header-footer(true)
@@ -142,7 +141,7 @@ Have fun #todo[writing your thesis!] and good luck with it !
 
 //////////////
 // Appendices
-////////////// 
+//////////////
 #cleardoublepage()
 #appendix-page()
 #pagebreak()
@@ -153,12 +152,12 @@ Have fun #todo[writing your thesis!] and good luck with it !
   sorted: "up",
   delimiter: " : ",
   row-gutter: 0.7em,
-  outlined: false,  
+  outlined: false,
 )
 
 #pagebreak()
 
-// Table of listings 
+// Table of listings
 #table-of-figures()
 
 // Code inclusion
@@ -167,21 +166,21 @@ Have fun #todo[writing your thesis!] and good luck with it !
 
 #let code_sample = read("code/sample.scala")
 
-#figure( 
+#figure(
     code()[
       #raw(code_sample, lang: "scala")
     ],
   caption: "Code included from the file example.scala"
 )
 
-#figure( 
+#figure(
     code()[
       #raw(read("code/sort.py"), lang: "python")
     ],
   caption: "Second code included from the file example.scala"
 )
 
-#figure( 
+#figure(
     code()[
       #raw(code_sample, lang: "scala")
     ],
