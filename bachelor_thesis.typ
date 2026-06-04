@@ -1,10 +1,10 @@
-#import "isc-hei-typst-templates/isc_templates.typ":*
+#import "@preview/isc-hei-bthesis:0.8.0": *
 
 #let doc_language = "en" // Valid values are en, fr
 
 #show: project.with(
-  title: "Numerical Stability of fMRIPrep Outputs and Its Impact on Functional Connectivity Biomarkers", // Your thesis title
-  subtitle: none, // Optional, use none if not needed
+  title: "Bachelor Thesis", // Your thesis title
+  subtitle: "Numerical Stability of fMRIPrep Outputs and Its Impact on Functional Connectivity Biomarkers", // Optional, use none if not needed
   authors: "Olivier Amacker",
   language: doc_language, // must be defined globally, see above
 
@@ -12,6 +12,7 @@
   thesis-co-supervisor: "Dr Okito Yamashita", // Optional, use none if not needed
   thesis-expert: "Dr Ayumu Yamashita", // Optional, use none if not needed
   thesis-id: "ISC-ID-26-1", // Your thesis ID (from the official project description)
+  hide-completeness-warning: false,
   project-repos: "https://github.com/madeinshinea/bachelor-thesis", // Your project git repository.
 
   school: "Haute École d'Ingénierie de Sion",
