@@ -29,9 +29,9 @@ jobs:
 
       - name: Setup the template
         run: |
-        cd isc-hei-typst-templates 
-        nix develop --command just install-symblinks
-        cd ..
+          cd isc-hei-typst-templates 
+          nix develop --command just install-symblinks
+          cd ..
 
       - name: Build Thesis via Nix Flake
         run: |
