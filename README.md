@@ -1,0 +1,39 @@
+# Bachelor Thesis Report — Numerical Stability of fMRIPrep Outputs and Its Impact on Functional Connectivity Biomarkers
+
+Please note that this README was generated with Opencode's Big Pickle model and fine tuned by myself.
+
+**Author:** Olivier Amacker  
+**Supervisors:** Prof. Dr Oscar Esteban, Dr Okito Yamashita (co-supervisor), Dr Ayumu Yamashita (expert)  
+**Institutions:** Haute Ecole d'Ingénierie de Sion (HEI), Advanced Telecommunication Research Institute International (ATR)
+**Thesis ID:** ISC-ID-26-1
+
+The latest pre-compiled PDF is available [here](https://github.com/MadeInShineA/bachelor-thesis-report/releases/download/thesis-latest/bachelor_thesis.pdf).
+
+## Development Environment
+
+The report is written in [Typst](https://typst.com). Build the PDF with:
+
+```bash
+# Using Nix (recommended, ensures reproducible environment)
+nix develop
+typst compile bachelor_thesis.typ bachelor_thesis.pdf
+
+# Without Nix (requires dependencies installed manually)
+typst compile bachelor_thesis.typ bachelor_thesis.pdf
+```
+
+### Dependencies (non-Nix install)
+
+| Dependency | Description | Download |
+|---|---|---|
+| **typst** | Typst compiler | [github.com/typst/typst/releases](https://github.com/typst/typst/releases) |
+| **tinymist** | (optional) Typst LSP server | [github.com/Myriad-Dreamin/tinymist/releases](https://github.com/Myriad-Dreamin/tinymist/releases) |
+| **Fira Code** | Monospaced font | [github.com/tonsky/FiraCode/releases](https://github.com/tonsky/FiraCode/releases) |
+| **Source Sans 3** | Sans-serif font (successor to Source Sans Pro) | [github.com/adobe-fonts/source-sans/releases](https://github.com/adobe-fonts/source-sans/releases) |
+| **Inria Sans / Inria Serif** | Headings & serif text | [github.com/BlackFoundryCom/InriaFonts/releases](https://github.com/BlackFoundryCom/InriaFonts/releases) |
+
+After downloading, install the fonts to your system font directory (e.g. `~/.local/share/fonts/` on Linux) and run `fc-cache -f`.
+
+## CI
+
+On every push to `main`, GitHub Actions builds the PDF and uploads it as a release artifact (`thesis-latest`).
