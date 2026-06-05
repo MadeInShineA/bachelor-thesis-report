@@ -27,6 +27,9 @@ jobs:
       - name: Enable Magic Nix Cache
         uses: DeterminateSystems/magic-nix-cache-action@main
 
+      - name: Setup the template
+        run: nix develop --command just install-symblinks
+
       - name: Build Thesis via Nix Flake
         run: |
           mkdir -p output
