@@ -1,4 +1,5 @@
-#import "@preview/isc-hei-bthesis:0.7.1" : *
+#import "@preview/isc-hei-bthesis:0.8.0" : *
+#import "@preview/acrostiche:0.7.0": *
 
 #page-title("Abstract")
 
@@ -16,6 +17,8 @@ The abstract should be self-contained, clear, and usually does not exceed 250–
 
 The abstract *must* be written in both French and English.
 
-#lorem(150)
+As FMRI preprocessing pipelines become more computationally heavy, requiring high dimensional computations, it is crucial to assess how a small numerical variability introduced by several different factors like the running #acr("OS"), parallelization strategies and hardware architecture impact the result of the preprocessing.
+
+This work is based upon the Alizadeh2025 #super[@Alizadeh2025.12.22.695524]
 
 #abstract-footer("en")

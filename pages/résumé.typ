@@ -1,4 +1,4 @@
-#import "@preview/isc-hei-bthesis:0.7.1" : *
+#import "@preview/isc-hei-bthesis:0.8.0" : *
 
 #page-title("Résumé")
 
@@ -12,9 +12,9 @@ Le résumé d’un mémoire de bachelor doit fournir un aperçu concis de l’en
 - Les principaux résultats ou découvertes.
 - La conclusion principale ou les implications du travail.
 
-Le résumé doit être autonome, clair et ne pas dépasser habituellement 250 à 300 mots. Il permet aux lecteurs de comprendre rapidement le but et les résultats du mémoire sans lire l’intégralité du document. 
+Le résumé doit être autonome, clair et ne pas dépasser habituellement 250 à 300 mots. Il permet aux lecteurs de comprendre rapidement le but et les résultats du mémoire sans lire l’intégralité du document.
 
-Le résumé doit être rédigé en français *et* en anglais. 
+Le résumé doit être rédigé en français *et* en anglais.
 
 #lorem(150)
 

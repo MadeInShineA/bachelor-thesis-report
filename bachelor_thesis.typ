@@ -138,7 +138,12 @@ Have fun #todo[writing your thesis!] and good luck with it !
 
 //#bibliography("bibliography.bib", full: true, style: "ieee", title)
 #pagebreak()
-#the-bibliography(bib-file: "bibliography.bib", full: true, style: "ieee")
+
+#the-bibliography(
+  bib-file: read("bibliography.bib", encoding: none),
+  full: true,
+  style: "ieee"
+)
 
 //////////////
 // Appendices
