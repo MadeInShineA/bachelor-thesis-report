@@ -17,8 +17,17 @@ The abstract should be self-contained, clear, and usually does not exceed 250–
 
 The abstract *must* be written in both French and English.
 
-As FMRI preprocessing pipelines become more computationally heavy, requiring high dimensional computations, it is crucial to assess how a small numerical variability introduced by several different factors like the running #acr("OS"), parallelization strategies and hardware architecture impact the result of the preprocessing.
+As fMRI preprocessing pipelines become more computationally heavy, requiring high-dimensional computations, it is crucial to assess how small numerical variability introduced by several different factors like the running #acr("OS"), parallelization strategies, and hardware architecture impacts the result of the preprocessing.
 
-This work is based upon the Alizadeh2025 #super[@Alizadeh2025.12.22.695524]
+Taking inspiration from "Numerical Variability of functional #acr("MRI") Graph Measures" Alizadeh2025#super[@Alizadeh2025.12.22.695524], this work goes a step further than MRI graph measures by also looking at #acr("MDD") biomarkers.
+
+
+The different results were obtained by running the fMRIPrep#super[@fMRIPrep] (25.2.5) preprocessing pipeline through a custom Docker container with floating-point arithmetic perturbations introduced by the Verificarlo#super[@verificarlo] and Fuzzy#super[@fuzzy] libraries. After preprocessing, #acr("FC") matrices were obtained using Nilearn#super[@Nilearn] (0.13.1). Absolute thresholds of 0.05, 0.1, 0.2, 0.3, 0.4 and 0.5 were applied to the #acr("FC") matrices, and graph metrics were computed using NetworkX#super[@SciPyProceedings_11] (3.6.1).
+
+#todo("Add Biomarker section")
+
+#todo("Add results section")
+
+#todo("Add conclusion section")
 
 #abstract-footer("en")
