@@ -3,8 +3,8 @@
 #let doc_language = "en" // Valid values are en, fr
 
 #show: project.with(
-  title: "Bachelor Thesis", // Your thesis title
-  subtitle: "Numerical Stability of fMRIPrep Outputs and Its Impact on Functional Connectivity Biomarkers", // Optional, use none if not needed
+  title: "Numerical Stability of Functional MRI\n Connectivity Biomarkers", // Your thesis title
+  subtitle: none, // Optional, use none if not needed
   authors: "Olivier Amacker",
   language: doc_language, // must be defined globally, see above
 
@@ -103,38 +103,26 @@ Have fun #todo[writing your thesis!] and good luck with it !
   caption: [Grace Hopper]
 ) <fig_engineer>
 
-#lorem-pars(600)
 
 = Development and Methodology 1
-#lorem-pars(1500)
 
 = Development and Methodology 2
-#lorem-pars(1500)
 
 = Development and Methodology 3
-#lorem-pars(1500)
 
 = Development and Methodology 4
-#lorem-pars(1500)
 
 = Development and Methodology 5
-#lorem-pars(1500)
 
 = Development and Methodology 6
-#lorem-pars(1500)
 
 = Development and Methodology 7
-#lorem-pars(1500)
 
 = Results and Discussion
-#lorem-pars(950)
 
-#lorem-pars(950)
 
-#lorem-pars(950)
 
 = Conclusion
-#lorem-pars(1200)
 
 //#bibliography("bibliography.bib", full: true, style: "ieee", title)
 #pagebreak()
