@@ -33,6 +33,8 @@
           packages = with pkgs; [
             typst
             tinymist
+
+            codebook
           ];
 
           shellHook = ''
