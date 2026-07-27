@@ -19,8 +19,8 @@
   programme: "Informatique et Systèmes de communication (ISC)",
 
   // Some keywords related to your thesis
-  keywords: ("medical data science", "FMRI", "fMRIPrep", "numerical stability", "benchmark"),
-  major : "Data engineering", // "Software engineering", "Embedded systems", "Security", "something else"
+  keywords: ("medical data science", "fMRI", "fMRIPrep", "numerical stability", "benchmark", "PCA", "neuro imaging"),
+  major: "Data engineering", // "Software engineering", "Embedded systems", "Security", "something else"
 
   date: datetime.today(), // or datetime.today()
 
@@ -100,7 +100,7 @@ Have fun #todo[writing your thesis!] and good luck with it !
 
 #figure(
   image("figs/pixelize.png", height: 4cm),
-  caption: [Grace Hopper]
+  caption: [Grace Hopper],
 ) <fig_engineer>
 
 
@@ -130,7 +130,7 @@ Have fun #todo[writing your thesis!] and good luck with it !
 #the-bibliography(
   bib-file: read("bibliography.bib", encoding: none),
   full: true,
-  style: "ieee"
+  style: "ieee",
 )
 
 //////////////
@@ -142,7 +142,7 @@ Have fun #todo[writing your thesis!] and good luck with it !
 
 // Table of acronyms, NOT COMPULSORY
 #print-index(
-  title: page-title(i18n(doc_language, "acronym-table-title"), mult:1, top:1em, bottom: 1em),
+  title: page-title(i18n(doc_language, "acronym-table-title"), mult: 1, top: 1em, bottom: 1em),
   sorted: "up",
   delimiter: " : ",
   row-gutter: 0.7em,
@@ -161,24 +161,24 @@ Have fun #todo[writing your thesis!] and good luck with it !
 #let code_sample = read("code/sample.scala")
 
 #figure(
-    code()[
-      #raw(code_sample, lang: "scala")
-    ],
-  caption: "Code included from the file example.scala"
+  code()[
+    #raw(code_sample, lang: "scala")
+  ],
+  caption: "Code included from the file example.scala",
 )
 
 #figure(
-    code()[
-      #raw(read("code/sort.py"), lang: "python")
-    ],
-  caption: "Second code included from the file example.scala"
+  code()[
+    #raw(read("code/sort.py"), lang: "python")
+  ],
+  caption: "Second code included from the file example.scala",
 )
 
 #figure(
-    code()[
-      #raw(code_sample, lang: "scala")
-    ],
-  caption: "Second code included from the file example.scala"
+  code()[
+    #raw(code_sample, lang: "scala")
+  ],
+  caption: "Second code included from the file example.scala",
 )
 
 

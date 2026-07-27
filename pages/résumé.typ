@@ -1,36 +1,24 @@
-#import "@preview/isc-hei-bthesis:0.8.0" : *
+#import "@preview/isc-hei-bthesis:0.8.0": *
 #import "@preview/acrostiche:0.7.0": *
 
 #page-title("Résumé")
 
 #v(1fr)
 
-Le résumé d’un mémoire de bachelor doit fournir un aperçu concis de l’ensemble du travail. Il inclut généralement :
-
-- Le contexte et la motivation de la recherche.
-- L’objectif principal ou la question de recherche.
-- Une brève description de la méthodologie ou de l’approche utilisée.
-- Les principaux résultats ou découvertes.
-- La conclusion principale ou les implications du travail.
-
-Le résumé doit être autonome, clair et ne pas dépasser habituellement 250 à 300 mots. Il permet aux lecteurs de comprendre rapidement le but et les résultats du mémoire sans lire l’intégralité du document.
-
-Le résumé doit être rédigé en français *et* en anglais.
-
 #reset-all-acronyms()
 
 #todo("Double check")
 
-Alors que les pipelines de prétraitement IRM deviennent de plus en plus lourdes en calculs, nécessitant des opérations de haute dimension, il est crucial d'évaluer comment une faible variabilité numérique introduite par plusieurs facteurs différents comme le #acr("SE") utilisé , les stratégies de parallélisation et l'architecture matérielle impactent le résultat du prétraitement.
+Alors que les pipelines d'#acr("IRMf") deviennent de plus en plus lourdes computationnellement, nécessitant des calculs en haute dimension, il est crucial d'évaluer comment de petites variations numériques introduites par plusieurs facteurs tels que le #acr("SE") utilisé, les stratégies de parallélisation et l'architecture matérielle affectent les résultats de ces dernières.
 
-S'inspirant de "Numerical Variability of functional MRI Graph Measures" Alizadeh2025#super[@Alizadeh2025.12.22.695524], ce travail va plus loin que les mesures de graphes IRM en examinant également les biomarqueurs du #acr("TDM").
+S'appuyant sur le papier « Numerical Variability of functional #acr("IRM") Graph Measures » #super[@Alizadeh2025.12.22.695524], ce travail va plus loin que l'examen de différentes mesures de graphes d'#acr("IRM") en examinant également les biomarqueurs du #acr("TDM"), notamment les biomarqueurs basés sur l'#acr("ACP") proposés par le papier "Extraction of robust functional connectivity patterns across psychiatric disorders using principal component analysis-based feature selection" #super[#cite(label("10.1162/IMAG.a.1121"))], en perturbant plusieurs étapes du pipeline. Il évalue également l'impact du prétraitement fMRIPrep numériquement perturbé sur les matrices de #acr("CF") en utilisant la métrique #acr("NPVR").
 
-Les différents résultats ont été obtenus en exécutant le pipeline de prétraitement fMRIPrep#super[@fMRIPrep] (v25.2.5) à travers un conteneur Docker personnalisé avec une des calculs à virgule flottante introduites par les bibliothèques Verificarlo#super[@verificarlo] et Fuzzy#super[@fuzzy]. Après le prétraitement, les #acr("FC") matrices ont été obtenues via Nilearn#super[@Nilearn] (v0.13.1). Des seuils absolus de 0.05, 0.1, 0.2, 0.3, 0.4, et 0.5 ont été appliqués aux #acr("FC") matrices, et les métriques de graphes ont été calculées avec NetworkX#super[@SciPyProceedings_11] (v3.6.1).
+Pour reproduire les résultats de l'étude originale #super[@Alizadeh2025.12.22.695524], les résultats ont été obtenus en exécutant le pipeline de prétraitement fMRIPrep #super[@fMRIPrep] (25.2.5) dans un #link("https://hub.docker.com/r/madeinshinea/fuzzy-fmriprep", [conteneur Docker personnalisé]) avec des perturbations arithmétiques en virgule flottante introduites par les bibliothèques Verificarlo #super[@verificarlo] et Fuzzy #super[@fuzzy]. Après prétraitement, les matrices de #acr("CF") ont été obtenues à l'aide de Nilearn #super[@Nilearn] (0.13.1). Différents seuils absolus ont été appliqués aux matrices de #acr("CF"), et les métriques de graphes ont été calculées à l'aide de NetworkX #super[@SciPyProceedings_11] (3.6.1).
 
-#todo("Add Biomarker section")
+Pour l'évaluation de la sélection de caractéristiques par #acr("ACP"), deux étapes du pipeline ont été perturbées à l'aide de l'image Docker Fuzzy `verificarlo/fuzzy:v2.0.0-lapack-python3.8.5-numpy-scipy-sklearn` : le calcul des coefficients de corrélation et l'analyse en composantes principales.
 
-#todo("Add results section")
+Les résultats de la reproduction de l'étude originale correspondent étroitement aux résultats originaux, à l'exception d'un graphe spécifique dont les valeurs de l'axe Y étaient codées en dur dans le code original. L'extraction de caractéristiques par #acr("ACP") s'est avérée très stable sous les perturbations numériques introduites, simulant la variabilité numérique au niveau du #acr("SE"), tout en produisant des résultats strictement identiques.
 
-#todo("Add conclusion section")
+Ces résultats suggèrent que l'extraction de caractéristiques par #acr("ACP") est non seulement stable entre différents sites d'imagerie et jeux de données, mais également robuste face à la variabilité numérique.
 
 #abstract-footer("fr")
