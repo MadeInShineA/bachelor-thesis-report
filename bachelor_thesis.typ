@@ -1,5 +1,8 @@
 #import "@preview/isc-hei-bthesis:0.8.0": *
 
+#import "@preview/acrostiche:0.7.0": *
+
+
 #let doc_language = "en" // Valid values are en, fr
 
 #show: project.with(
@@ -57,6 +60,8 @@
 // Enable headers and footers from this point on
 #set-header-footer(true)
 
+#todo("Remove")
+
 Writing a report is an exercise that involves both *content* and *form*. In this document, we aim to simplify the formatting aspect without making any assumptions about the content, specifically in the context of the ISC degree programme#footnote[Here is how to add a footnote https://isc.hevs.ch].
 
 == The content of a thesis
@@ -96,31 +101,22 @@ If you compile your thesis using the `typst` command line tool, or by using the 
 ```
 
 = Introduction
-Have fun #todo[writing your thesis!] and good luck with it !
 
-#figure(
-  image("figs/pixelize.png", height: 4cm),
-  caption: [Grace Hopper],
-) <fig_engineer>
+The goal of this bachelor thesis made in collaboration with the #acr("ATR"), is to look at the numerical stability of #acr("fMRI") connectivity biomarkers. This work was divided into three different parts:
 
+- Reproduce the results of a previous paper #super[@Alizadeh2025.12.22.695524] which goal was to look at the stability of #acr("FC") matrices graph metrics
+- Look into the numerical stability of the #acr("FC") matrices themselves
+- Assess the numerical stability of a recent paper #super[#cite(label("10.1162/IMAG.a.1121"))] which objective was to find a way to extract #acr("FC") biomarkers robust to different sites and datasets
 
-= Development and Methodology 1
+This three parts allowed me to have a great understanding of what does numerical stability mean, and to what extend this can be calculated.
 
-= Development and Methodology 2
+It's very important to assess the numerical stability of #acr("fMRI") pipelines case by case, as it's stability may vary a lot depending of the pipeline.
 
-= Development and Methodology 3
+= State of the Art
 
-= Development and Methodology 4
-
-= Development and Methodology 5
-
-= Development and Methodology 6
-
-= Development and Methodology 7
+= Development and Methodology
 
 = Results and Discussion
-
-
 
 = Conclusion
 
