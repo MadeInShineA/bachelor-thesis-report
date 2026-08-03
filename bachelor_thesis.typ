@@ -55,7 +55,6 @@
 #cleardoublepage()
 #include "pages/acknowledgements.typ"
 
-= Writing a thesis
 
 // Enable headers and footers from this point on
 #set-header-footer(true)
@@ -81,6 +80,8 @@ The general structure of a bachelor thesis typically includes the following sect
 11. *References / Bibliography*: Lists all sources cited in the thesis.
 12. *Appendices*: (Optional) Contains supplementary material such as raw data, code, or additional explanations.
 
+#reset-all-acronyms()
+
 This structure may vary depending on the field of study, but these elements are commonly found in most bachelor theses. They are recommended for the _ISC Bachelor thesis_ and should be adapted to the specific requirements of your thesis (e.g., if you have a state of the art section or not).
 
 You can also change the order or the names of the sections, for instance, if you want to put the state of the art before the introduction, or if you want to add a section on methodology before the results.
@@ -100,19 +101,31 @@ If you compile your thesis using the `typst` command line tool, or by using the 
 ./fonts/install_fonts.sh
 ```
 
-= Introduction
+= Introduction <intro>
+#link("https://en.wikipedia.org/wiki/Functional_magnetic_resonance_imaging")[#acr("fMRI")] has revolutionized neuroscience by enabling non-invasive observation of brain activity through blood oxygenation level-dependent signals. A key application is the analysis of #acr("FC"), which examines temporal correlations between spatially distinct brain regions to construct connectivity matrices. These matrices serve as the foundation for deriving graph-theoretical metrics and biomarkers used in clinical research, particularly for conditions such as #link("https://en.wikipedia.org/wiki/Major_depressive_disorder")[#acr("MDD")].
 
-The goal of this bachelor thesis made in collaboration with the #acr("ATR"), is to look at the numerical stability of #acr("fMRI") connectivity biomarkers. This work was divided into three different parts:
+As #acr("fMRI") pipelines become increasingly computationally intensive, involving high-dimensional matrix operations and complex preprocessing steps, the question of numerical reliability becomes crucial. Small numerical perturbations introduced by factors such as #link("https://en.wikipedia.org/wiki/Operating_system")[#acr("OS")] differences (as you can witness on @os-differences), hardware architecture, and parallelization strategies can propagate through the pipeline, potentially affecting downstream results.
 
-- Reproduce the results of a previous paper #super[@Alizadeh2025.12.22.695524] which goal was to look at the stability of #acr("FC") matrices graph metrics
-- Look into the numerical stability of the #acr("FC") matrices themselves
-- Assess the numerical stability of a recent paper #super[#cite(label("10.1162/IMAG.a.1121"))] which objective was to find a way to extract #acr("FC") biomarkers robust to different sites and datasets
+#figure(image("./figs/os_result_difference.png", height: 250pt), caption: [Example of the same program giving different results depending of the #acr("OS")])<os-differences>
 
-This three parts allowed me to have a great understanding of what does numerical stability mean, and to what extend this can be calculated.
+In the context of multi-site studies and clinical applications, where reproducibility is essential, understanding and quantifying this numerical variability is critical. Unstable biomarkers could lead to unreliable clinical decisions or failed replication across research sites. However, systematic assessment of numerical stability in #acr("fMRI") pipelines remains limited, particularly for advanced feature extraction methods.
 
-It's very important to assess the numerical stability of #acr("fMRI") pipelines case by case, as it's stability may vary a lot depending of the pipeline.
+The goal of this bachelor thesis, conducted in collaboration with the #link("https://www.atr.jp/index.html", acr("ATR")), is to investigate the numerical stability of #acr("fMRI") connectivity biomarkers. This work was divided into three complementary parts.
+
+First, the objective was to reproduce the results of Alizadeh et al., 2025 #super[@Alizadeh2025.12.22.695524], which examined how numerical variability affects the sample size required for statistical significance and the stability of #acr("FC") matrix graph metrics using the #acr("NPVR") metric.
+
+Second, the focus shifted to the numerical stability of the #acr("FC") matrices themselves, rather than their derived graph metrics, providing edge-wise stability analysis.
+
+Finally, the numerical stability of a feature extraction method based on #link("https://en.wikipedia.org/wiki/Principal_component_analysis")[#acr("PCA")] was assessed, building on the work of Yamashita et al., 2026 #super[#cite(label("10.1162/IMAG.a.1121"))]. This method extracts #acr("FC") biomarkers robust to different sites and datasets. The stability assessment involved perturbing the correlation coefficient computation (```Python np.corrcoef```) and forcing the #acr("PCA") to use 32-bit floating-point inputs rather than 64-bit.
 
 = State of the Art
+
+Over the recent years, different tools have been created to help the assessment of numerical variability. Notably #link("https://github.com/verificarlo/verificarlo", "Verificarlo") #super[@denis2018verificarlocheckingfloatingpoint] which is a tool used to compile programs with LLVM level arithmetic perturbations and #link("https://github.com/verificarlo/fuzzy", "Fuzzy") #super[@greg_kiar_2026_20906259] which consists of already perturbed #link("https://www.docker.com/resources/what-container/", "Docker containers") for certain #link("https://www.python.org/","Python") libraries like #link("https://numpy.org/","Numpy") or #link("https://scipy.org/","Scipy").
+
+
+Existing work has already been done regarding the evaluation of numerical in different pipelines. Notably regarding #acr("FC") matrix graph metrics as stated in @intro, or by looking at the effect of numerical variability on structural #acr("MRI") measures of Parkinson's disease Chatelain et al., 2026 #super[@Chatelain2026.01.09.698203]. Interestingly, numerical variability as also been used for data augmentation Gonzalez-Pepe et al., 2026 #super[@gonzalezpepe2026fuzzypytorchrapidnumerical].
+
+However, studies on numerical-variability are heterogeneous when it comes to comparing different pipelines. This means that if a pipeline is different that the one evaluated in one of the previously cited papers, we can't induce its numerical stability and need to assess it ourselves.
 
 = Development and Methodology
 

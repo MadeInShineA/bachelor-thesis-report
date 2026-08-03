@@ -6,7 +6,7 @@
 
 #v(1fr)
 
-I want to thank the following people and institution which played a huge role in making this Bachelor Thesis possible:
+I want to thank the following people and institution which played a huge role in making this bachelor thesis possible:
 
 - Prof. Dr Oscar Esteban, for giving me the opportunity to conduct this Bachelor Thesis abroad, as well as for his guidance and supervision.
 - Dr Okito Yamashita and Dr Ayumu Yamashita, for their dedication and continuous feedback throughout this project.
