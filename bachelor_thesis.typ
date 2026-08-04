@@ -134,6 +134,32 @@ However, these stability conclusions cannot be generalized across pipelines due 
 
 = Development and Methodology
 
+This section describes the development process and methodology underlying this thesis. Beyond the thesis-specific code, this work included contributions to external repositories via pull requests, including fixes to the #link("https://github.com/ISC-HEI/isc-hei-typst-templates")[ISC-HEI Typst thesis template], enhancements to #link("https://github.com/Ayumu722/pca-based-feature-extraction")[Yamashita et al.'s PCA-based feature extraction package], and a correction to the #acr("NPVR") simulation in #link("https://github.com/mina94az/Numerical-Variability-of-functional-MRI-Graph-Measures")[Alizadeh et al.'s repository].
+
+== Code availability
+
+The code developed during this bachelor thesis is publicly available on #link("https://github.com/madeinshinea/bachelor-thesis", "GitHub"). The repository is organized using #link("https://git-scm.com/book/en/v2/Git-Tools-Submodules", "git submodules") to separate concerns: the `bachelor-thesis-report` submodule contains this Typst report, while the `bachelor-thesis-project` submodule contains all analysis code, including preprocessing pipelines, analysis notebooks, and job submission scripts for the #acr("ATR") #link("https://en.wikipedia.org/wiki/High-performance_computing", acr("HPC")) cluster.
+
+An interactive project website is available at #link("https://olivier.amacker.dev/bachelor-thesis")[olivier.amacker.dev/bachelor-thesis], providing browsable access to the four analysis notebooks developed with #link("https://marimo.io/", "Marimo") and their respective outputs, a daily journal documenting the project's progress, and the different presentations delivered during the thesis.
+
+The development environment is managed via #link("https://nixos.org/", "Nix") and #link("https://docs.astral.sh/uv/", "uv"), ensuring its reproducibility. The fuzzy fMRIPrep #link("https://www.docker.com/", "Docker") container, built on #link("https://github.com/verificarlo/verificarlo", "Verificarlo") and the Fuzzy libmath library, is published on #link("https://hub.docker.com/repository/docker/madeinshinea/fuzzy-fmriprep/general", "DockerHub") for reproducibility.
+
+== Reproduction of Alizadeh et al., 2026
+
+=== NPVR Simulation
+
+=== Graph Metrics Stability Assessment
+
+== Edge-wise FC Matrix Stability Analysis
+
+== PCA-based Feature Extraction Stability
+
+=== Reproduction on SRPB and BMB Datasets
+
+=== FC Matrix Extraction Perturbation
+
+=== PCA Dimensionality Reduction Perturbation
+
 = Results and Discussion
 
 = Conclusion

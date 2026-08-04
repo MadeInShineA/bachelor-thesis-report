@@ -11,6 +11,7 @@
   "PCA": "Principal Component Analysis",
   "PR": "Pull Request",
   "ATR": "Advanced Telecommunications Research Institute International",
+  "HPC": "High Performance Computing",
   // French
   "IRMf": "Imagerie par Résonance Magnétique Fonctionnelle",
   "SE": "Système d'Exploitation",
