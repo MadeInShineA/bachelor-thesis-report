@@ -95,7 +95,7 @@ If you are unsure about the title of your supervisor, co-supervisor, or expert, 
 
 == Compiling the thesis
 
-If you compile your thesis using the `typst` command line tool, or by using the `typst` extension in Visual Studio Code, please not that you must install the fonts used in this template. You can do so by running the following command in your terminal:
+If you compile your thesis using the `typst` command line tool, or by using the `typst` extension in Visual Studio Code, please note that you must install the fonts used in this template. You can do so by running the following command in your terminal:
 
 ```bash
 ./fonts/install_fonts.sh
@@ -104,15 +104,15 @@ If you compile your thesis using the `typst` command line tool, or by using the 
 = Introduction <intro>
 #link("https://en.wikipedia.org/wiki/Functional_magnetic_resonance_imaging")[#acr("fMRI")] has revolutionized neuroscience by enabling non-invasive observation of brain activity through blood oxygenation level-dependent signals. A key application is the analysis of #acr("FC"), which examines temporal correlations between spatially distinct brain regions to construct connectivity matrices. These matrices serve as the foundation for deriving graph-theoretical metrics and biomarkers used in clinical research, particularly for conditions such as #link("https://en.wikipedia.org/wiki/Major_depressive_disorder")[#acr("MDD")].
 
-As #acr("fMRI") pipelines become increasingly computationally intensive, involving high-dimensional matrix operations and complex preprocessing steps, the question of numerical reliability becomes crucial. Small numerical perturbations introduced by factors such as #link("https://en.wikipedia.org/wiki/Operating_system")[#acr("OS")] differences (as you can witness on @os-differences), hardware architecture, and parallelization strategies can propagate through the pipeline, potentially affecting downstream results.
+As #acr("fMRI") pipelines become increasingly computationally intensive, involving high-dimensional matrix operations and complex preprocessing steps, the question of numerical reliability becomes crucial. Small numerical perturbations introduced by factors such as #link("https://en.wikipedia.org/wiki/Operating_system")[#acr("OS")] differences (as you can see on @os-differences), hardware architecture, and parallelization strategies can propagate through the pipeline, potentially affecting downstream results.
 
-#figure(image("./figs/os_result_difference.png", height: 250pt), caption: [Example of the same program giving different results depending of the #acr("OS")])<os-differences>
+#figure(image("./figs/os_result_difference.png", height: 250pt), caption: [Example of the same program giving different results depending on the #acr("OS")])<os-differences>
 
 In the context of multi-site studies and clinical applications, where reproducibility is essential, understanding and quantifying this numerical variability is critical. Unstable biomarkers could lead to unreliable clinical decisions or failed replication across research sites. However, systematic assessment of numerical stability in #acr("fMRI") pipelines remains limited, particularly for advanced feature extraction methods.
 
 The goal of this bachelor thesis, conducted in collaboration with the #link("https://www.atr.jp/index.html", acr("ATR")), is to investigate the numerical stability of #acr("fMRI") connectivity biomarkers. This work was divided into three complementary parts.
 
-First, the objective was to reproduce the results of Alizadeh et al., 2025 #super[@Alizadeh2025.12.22.695524], which examined how numerical variability affects the sample size required for statistical significance and the stability of #acr("FC") matrix graph metrics using the #acr("NPVR") metric.
+First, the objective was to reproduce the results of Alizadeh et al., 2026 #super[@Alizadeh2025.12.22.695524], which examined how numerical variability affects the sample size required for statistical significance and the stability of #acr("FC") matrix graph metrics using the #acr("NPVR") metric.
 
 Second, the focus shifted to the numerical stability of the #acr("FC") matrices themselves, rather than their derived graph metrics, providing edge-wise stability analysis.
 
@@ -120,12 +120,17 @@ Finally, the numerical stability of a feature extraction method based on #link("
 
 = State of the Art
 
-Over the recent years, different tools have been created to help the assessment of numerical variability. Notably #link("https://github.com/verificarlo/verificarlo", "Verificarlo") #super[@denis2018verificarlocheckingfloatingpoint] which is a tool used to compile programs with LLVM level arithmetic perturbations and #link("https://github.com/verificarlo/fuzzy", "Fuzzy") #super[@greg_kiar_2026_20906259] which consists of already perturbed #link("https://www.docker.com/resources/what-container/", "Docker containers") for certain #link("https://www.python.org/","Python") libraries like #link("https://numpy.org/","Numpy") or #link("https://scipy.org/","Scipy").
+In recent years, different tools have been created to help the assessment of numerical variability. Notably #link("https://github.com/verificarlo/verificarlo", "Verificarlo") Denis et al., 2018 #super[@denis2018verificarlocheckingfloatingpoint] which is a tool used to compile programs with #link("https://en.wikipedia.org/wiki/LLVM", "LLVM") level arithmetic perturbations and #link("https://github.com/verificarlo/fuzzy", "Fuzzy") #super[@greg_kiar_2026_20906259] which consists of already perturbed #link("https://www.docker.com/resources/what-container/", "Docker containers") for certain #link("https://www.python.org/","Python") libraries like #link("https://numpy.org/","Numpy") or #link("https://scipy.org/","Scipy"), and more recently #link("https://github.com/big-data-lab-team/fuzzy-pytorch", "Fuzzy PyTorch") Gonzalez-Pepe et al., 2026 #super[@gonzalezpepe2026fuzzypytorchrapidnumerical] which extends this approach to deep learning workflows.
 
+Using these tools, the impact of numerical variability has been investigated across several neuroimaging domains such as functional, structural and diffusion imaging. As introduced in @intro, Alizadeh et al., 2026 #super[@Alizadeh2025.12.22.695524] evaluated the numerical variability of different graph measures derived from the #acr("FC") matrices resulting from the widely used #link("https://fmriprep.org/en/stable/", "fMRIPrep") Esteban et al., 2019 #super[@fMRIPrep] preprocessing pipeline. Using the #acr("NPVR") metric, they obtained values ranging from 0.1 to 0.2 for most graph metrics. These results were found to vary across brain regions, #acr("FC") thresholds and confound regression strategies.
 
-Existing work has already been done regarding the evaluation of numerical in different pipelines. Notably regarding #acr("FC") matrix graph metrics as stated in @intro, or by looking at the effect of numerical variability on structural #acr("MRI") measures of Parkinson's disease Chatelain et al., 2026 #super[@Chatelain2026.01.09.698203]. Interestingly, numerical variability as also been used for data augmentation Gonzalez-Pepe et al., 2026 #super[@gonzalezpepe2026fuzzypytorchrapidnumerical].
+In structural imaging pipelines, Mirhakimi et al., 2025 #super[@mirhakimi2025numericaluncertaintylinearregistration] investigated numerical uncertainty in linear registration algorithms, demonstrating that small floating-point variations can lead to measurable differences in image alignment. Similarly, Chatelain et al., 2026 #super[@Chatelain2026.01.09.698203] quantified the impact of numerical variability on structural #acr("MRI") measures in Parkinson's disease, finding that numerical variation reached nearly one-third of population variability in multiple cortical and subcortical regions.
 
-However, studies on numerical-variability are heterogeneous when it comes to comparing different pipelines. This means that if a pipeline is different that the one evaluated in one of the previously cited papers, we can't induce its numerical stability and need to assess it ourselves.
+In diffusion imaging pipelines, Kiar et al., 2021 #super[@kiar2021] showed that numerical uncertainty in analytical workflows leads to impactful variability in brain network measurements, revealing that different computational environments can produce substantially different connectivity results.
+
+Interestingly, numerical variability has also been used as a resource rather than a limitation. Gonzalez-Pepe et al., 2026 #super[@gonzalezpepe2026fuzzypytorchrapidnumerical] established that controlled numerical perturbations can serve as an effective data augmentation strategy for deep learning models, artificially expanding training datasets and improving model generalization.
+
+However, these stability conclusions cannot be generalized across pipelines due to heterogeneous methodologies and implementations. While graph-theoretical metrics have been studied by Alizadeh et al., 2026 #super[@Alizadeh2025.12.22.695524], edge-wise #acr("FC") matrix stability remains unexplored. Additionally, the #acr("PCA")-based feature extraction proposed by Yamashita et al., 2026 #super[#cite(label("10.1162/IMAG.a.1121"))] has shown robustness across different sites and datasets, making its numerical stability verification crucial. This thesis addresses these gaps through edge-wise #acr("FC") analysis and #acr("PCA")-based extraction evaluation.
 
 = Development and Methodology
 
