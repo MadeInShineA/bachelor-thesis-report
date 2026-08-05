@@ -12,6 +12,8 @@
   "PR": "Pull Request",
   "ATR": "Advanced Telecommunications Research Institute International",
   "HPC": "High Performance Computing",
+  "MCA": "Monte Carlo Arithmetic",
+  "FWHM": "Full Width at Half Maximum",
   // French
   "IRMf": "Imagerie par Résonance Magnétique Fonctionnelle",
   "SE": "Système d'Exploitation",
