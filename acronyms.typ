@@ -9,6 +9,8 @@
   "MRI": "Magnetic Resonance Imaging",
   "NPVR": "Numerical Population Variability Ratio",
   "PCA": "Principal Component Analysis",
+  "PC": "Principal Component",
+  "FDR-BH": "False Discovery Rate with Benjamini-Hochberg correction",
   "PR": "Pull Request",
   "ATR": "Advanced Telecommunications Research Institute International",
   "HPC": "High Performance Computing",

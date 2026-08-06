@@ -22,7 +22,7 @@
   programme: "Informatique et Systèmes de communication (ISC)",
 
   // Some keywords related to your thesis
-  keywords: ("medical data science", "fMRI", "fMRIPrep", "numerical stability", "benchmark", "PCA", "neuroimaging"),
+  keywords: ("medical data science", "fMRI", "fMRIPrep", "numerical stability", "bio-markers", "PCA", "neuroimaging", "MDD"),
   major: "Data engineering", // "Software engineering", "Embedded systems", "Security", "something else"
 
   date: datetime.today(), // or datetime.today()
@@ -138,7 +138,7 @@ However, these stability conclusions cannot be generalized across pipelines due 
 
 = Development and Methodology
 
-This section describes the development process and methodology underlying this thesis. Beyond the thesis-specific code, this work included contributions to external repositories via pull requests, including fixes to the #link("https://github.com/ISC-HEI/isc-hei-typst-templates")[ISC-HEI Typst thesis template], enhancements to #link("https://github.com/Ayumu722/pca-based-feature-extraction")[Yamashita et al.'s PCA-based feature extraction package], and a correction to the #acr("NPVR") simulation in #link("https://github.com/mina94az/Numerical-Variability-of-functional-MRI-Graph-Measures")[Alizadeh et al.'s repository].
+This section describes the development process and methodology underlying this thesis. Beyond the thesis-specific code, this work included contributions to external repositories via #acr("PR")s, including fixes to the #link("https://github.com/ISC-HEI/isc-hei-typst-templates")[ISC-HEI Typst thesis template], enhancements to #link("https://github.com/Ayumu722/pca-based-feature-extraction")[Yamashita et al.'s PCA-based feature extraction package], and a correction to the #acr("NPVR") simulation in #link("https://github.com/mina94az/Numerical-Variability-of-functional-MRI-Graph-Measures")[Alizadeh et al.'s repository].
 
 == Code availability
 
@@ -160,9 +160,9 @@ An interactive notebook for this simulation can be accessed #link("https://olivi
 
 The simulation begins by generating two synthetic populations using normal distributions with the same means but different standard deviations: $sigma = 0.1$ for the low variability group and $sigma = 0.4$ for the high variability group. For each population, the #acr("NPVR") is calculated using the formula $text("NPVR") = sigma_"num" / sigma_"pop"$, where $sigma_"num"$ represents the numerical variability and $sigma_"pop"$ the population variability. The populations are then visualized in the $sigma_"num"$ / $sigma_"pop"$ space to assess their relative positions on #acr("NPVR") contour lines. Finally, the relationship between #acr("NPVR"), sample size, and Cohen's $d$ variations is visualized to assess how numerical noise propagates into statistical inference.
 
-During this reproduction, the original source code was reviewed and an error was identified. The #acr("NPVR") values in the final visualization were hardcoded to `0.287` and `0.496` rather than computed from the generated distributions. This bug was fixed through a #link("https://github.com/mina94az/Numerical-Variability-of-functional-MRI-Graph-Measures/pull/3", "pull request") that was merged into the original repository.
+During this reproduction, the original source code was reviewed and an error was identified. The #acr("NPVR") values in the final visualization were hardcoded to `0.287` and `0.496` rather than computed from the generated distributions. This bug was fixed through a #link("https://github.com/mina94az/Numerical-Variability-of-functional-MRI-Graph-Measures/pull/3", acr("PR")) that was merged into the original repository.
 
-=== Graph Metrics Stability Assessment
+=== Graph Metrics Stability Assessment <graph-section>
 
 The notebook code developed for this step and its outputs are available as a #link("https://olivier.amacker.dev/bachelor-thesis/site/notebooks/fuzzy-fmriprep-graph-metrics-analysis.html", "static HTML page").
 
@@ -217,11 +217,45 @@ The remaining analysis followed the same procedure as the original study. After 
 
 == Edge-wise FC Matrix Stability Analysis
 
+The notebook code developed for this step and its outputs are available as a #link("https://olivier.amacker.dev/bachelor-thesis/site/notebooks/fuzzy-fmriprep-fc-matrices-analysis.html", "static HTML page").
+
+Reusing the perturbed fMRIPrep runs from @graph-section, this section extends the analysis from graph-level metrics to individual edges of the #acr("FC") matrices. The pooled #acr("NPVR") was computed independently for each of the 4950 edges (upper triangle of the 100x100 matrix) using the same formula as before.
+
+Two confound strategies were compared: the full set of 15 confounds and a filtered set excluding only the global signal. The global signal regression remains a debated practice in the neuroimaging community, as it may remove both nuisance signals and neural activity of interest Xu et al., 2018 #super[@xu2018], Xifra-Porxas et al., 2025 #super[@xifra2025]. To quantify its impact on edge-wise numerical stability, a delta #acr("NPVR") was computed for each edge as the difference between the two confound strategies.
+
+The edge-wise #acr("NPVR") values were visualized as connectivity matrices, scatter plots, and histograms. To assess spatial patterns, edge-wise values were aggregated per brain region by computing the mean and median #acr("NPVR") across all connected edges and mapped onto the Schaefer 2018 atlas.
+
 == PCA-based Feature Extraction Stability
 
-=== Reproduction on SRPB and BMB Datasets
+A browsable version of the analysis notebook is available #link("https://olivier.amacker.dev/bachelor-thesis/site/notebooks/fuzzy-pca-dim-reduction-analysis.html", "online").
 
-=== FC Matrix Extraction Perturbation
+This section had three objectives. First, reproduce the #acr("PCA")-based feature extraction method developed by Yamashita et al., 2026 #super[#cite(label("10.1162/IMAG.a.1121"))] on the complete #link("https://bicr-resource.atr.jp/srpbsopen/", "SRPB dataset") #super[@Tanaka2021], as opposed to the original paper which split the data into discovery and validation sets. Second, apply the same method to the complete #link("https://mridata-brainminds-beyond.atr.jp/dataset/bmbpt/", "BMB dataset") #super[@KOIKE2021102600]. Third, perturb different steps of the pipeline: the correlation computation using a #link("https://hub.docker.com/layers/verificarlo/fuzzy/v2.0.0-lapack-python3.8.5-numpy-scipy-sklearn/images/sha256-993543dcfc0f40aa5cd2de404b5dccdaeea5673c7fabd39505f47ac5da6eb466", [#acr("MCA")-instrumented Docker container]) and the #acr("PCA") dimensionality reduction by forcing 32-bit floating-point inputs instead of the standard 64-bit precision.
+
+#pagebreak()
+
+=== Reproduction on the SRPB and BMB Datasets
+
+The original #acr("PCA") feature extraction code was publicly available on #link("https://github.com/Ayumu722/pca-based-feature-extraction/tree/9e6c907c623096fc08a02785fe64ab1baf6711ef", "GitHub") but organized as separate Python files, making integration challenging. A #link("https://github.com/Ayumu722/pca-based-feature-extraction/pull/1", acr("PR")) was submitted and merged to restructure it into the `pcafeat` package with #link("https://github.com/astral-sh/uv", "uv") as a dependency manager.
+
+The extraction pipeline was applied to six metrics: diagnosis (MDD vs. HC), BDI score, age, sex, imaging site, and mean framewise displacement. The pipeline works as follows:
++ A #acr("PCA") reduces all subjects' #acr("FC") vectors to n principal components (#acr("PC")s)
++ Each #acr("PC") is tested for association with target variables using appropriate statistical tests, with results plotted during testing:
+  - t-tests for binary categories (e.g., sex)
+  - ANOVA for multi-level categories (e.g., site)
+  - Pearson's correlation for continuous variables (e.g., age)
++ Components significantly associated with the target after #acr("FDR-BH") correction (q < 0.05) are selected
++ Their #acr("FC") weights are tested via chi-squared test with the same correction threshold
++ Only connections surviving both corrections are retained as final biomarkers
+
+During replication of the original paper's pipeline, the plots generated during #acr("PC") association testing were found to have missing labels and incomplete titles. This issue was fixed in another #link("https://github.com/Ayumu722/pca-based-feature-extraction/pull/3", acr("PR")).
+
+After running the extraction pipeline on both datasets, the selected #acr("FC")s for PC 2 were plotted on brain surface maps using a combined parcellation of 446 ROIs: 360 cortical regions from the Glasser et al., 2016 #super[@Glasser2016] atlas, 54 subcortical regions from the Tian et al., 2020 #super[@Tian2020] atlas, and 32 cerebellar regions from the Nettekoven et al., 2024 #super[@nettekoven2024] atlas. Functional network assignments were derived from the Yeo et al., 2011 #super[@Yeo2011] 7-network parcellation. Each selected connection was visualized as an edge between brain regions, color-coded by direction of effect: red indicating over-connectivity in #acr("MDD") relative to healthy controls, and blue indicating under-connectivity. Nodes were colored according to their functional network assignment (Visual, SomatoMotor, DorsalAttention, DefaultMode, Limbic, Salience, PrefrontalControl, Subcortical, or Cerebellum).
+
+Network statistics were also computed to quantify the distribution of selected connections across brain networks, including the number of participating nodes per network, the proportion of intra-network versus inter-network edges, and the most frequent inter-network connection pairs.
+
+=== Fc Matrix Regular Extraction
+
+=== FC Matrix Perturbed Extraction
 
 === PCA Dimensionality Reduction Perturbation
 
