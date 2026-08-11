@@ -138,7 +138,7 @@ However, these stability conclusions cannot be generalized across pipelines due 
 
 = Development and Methodology
 
-This section describes the development process and methodology underlying this thesis. Beyond the thesis-specific code, this work included contributions to external repositories via #acr("PR")s, including fixes to the #link("https://github.com/ISC-HEI/isc-hei-typst-templates")[ISC-HEI Typst thesis template], enhancements to #link("https://github.com/Ayumu722/pca-based-feature-extraction")[Yamashita et al.'s PCA-based feature extraction package], and a correction to the #acr("NPVR") simulation in #link("https://github.com/mina94az/Numerical-Variability-of-functional-MRI-Graph-Measures")[Alizadeh et al.'s repository].
+This section describes the development process and methodology underlying this thesis. Beyond the thesis-specific code, this work included contributions to external repositories via #acrpl("PR"), including fixes to the #link("https://github.com/ISC-HEI/isc-hei-typst-templates")[ISC-HEI Typst thesis template], enhancements to Yamashita et al.'s #link("https://github.com/Ayumu722/pca-based-feature-extraction")[PCA-based feature extraction package], and a correction to the #acr("NPVR") simulation in Alizadeh et al.'s #link("https://github.com/mina94az/Numerical-Variability-of-functional-MRI-Graph-Measures")[GitHub repository].
 
 == Code availability
 
@@ -146,7 +146,7 @@ The code developed during this bachelor thesis is publicly available on #link("h
 
 An interactive project website is available at #link("https://olivier.amacker.dev/bachelor-thesis")[olivier.amacker.dev/bachelor-thesis], providing browsable access to the four analysis notebooks developed with #link("https://marimo.io/", "Marimo") and their respective outputs, a daily journal documenting the project's progress, and the different presentations delivered during the thesis.
 
-The development environment is managed via #link("https://nixos.org/", "Nix") and #link("https://docs.astral.sh/uv/", "uv"), ensuring its reproducibility. The fuzzy fMRIPrep #link("https://www.docker.com/", "Docker") container, built on #link("https://github.com/verificarlo/verificarlo", "Verificarlo") and the Fuzzy libmath library, is published on #link("https://hub.docker.com/repository/docker/madeinshinea/fuzzy-fmriprep/general", "DockerHub") for reproducibility.
+The development environment is managed via #link("https://nixos.org/", "Nix") and #link("https://docs.astral.sh/uv/", "uv"), ensuring its reproducibility. The fuzzy fMRIPrep #link("https://www.docker.com/", "Docker") container, built on #link("https://github.com/verificarlo/verificarlo", "Verificarlo") and the Fuzzy's libmath library, used for running perturbed preprocessing runs, is published on #link("https://hub.docker.com/repository/docker/madeinshinea/fuzzy-fmriprep/general", "DockerHub") for reproducibility.
 
 #pagebreak()
 
@@ -233,31 +233,56 @@ This section had three objectives. First, reproduce the #acr("PCA")-based featur
 
 #pagebreak()
 
-=== Reproduction on the SRPB and BMB Datasets
+=== Reproduction on the SRPB and BMB Datasets <reproduction>
 
 The original #acr("PCA") feature extraction code was publicly available on #link("https://github.com/Ayumu722/pca-based-feature-extraction/tree/9e6c907c623096fc08a02785fe64ab1baf6711ef", "GitHub") but organized as separate Python files, making integration challenging. A #link("https://github.com/Ayumu722/pca-based-feature-extraction/pull/1", acr("PR")) was submitted and merged to restructure it into the `pcafeat` package with #link("https://github.com/astral-sh/uv", "uv") as a dependency manager.
 
-The extraction pipeline was applied to six metrics: diagnosis (MDD vs. HC), BDI score, age, sex, imaging site, and mean framewise displacement. The pipeline works as follows:
-+ A #acr("PCA") reduces all subjects' #acr("FC") vectors to n principal components (#acr("PC")s)
-+ Each #acr("PC") is tested for association with target variables using appropriate statistical tests, with results plotted during testing:
+The #acr("FC") matrices used as inputs to the pipeline had already been preprocessed and harmonized across imaging sites by #acr("ATR") for both datasets using the method of Yamashita et al., 2019 #super[#cite(label("10.1371/journal.pbio.3000042"))], so they were used directly without any additional preprocessing or harmonization step.
+
+The extraction pipeline was applied to six metrics: diagnosis (MDD vs. HC), BDI score, age, sex, imaging site, and mean #acr("FD"). The pipeline works as follows:
++ A #acr("PCA") reduces all $n$ subjects' #acr("FC") vectors to $n$ #acrpl("PC")
++ Each #acr("PC") is tested for association with the desired target variables using appropriate statistical tests, with results plotted during testing:
   - t-tests for binary categories (e.g., sex)
   - ANOVA for multi-level categories (e.g., site)
   - Pearson's correlation for continuous variables (e.g., age)
-+ Components significantly associated with the target after #acr("FDR-BH") correction (q < 0.05) are selected
-+ Their #acr("FC") weights are tested via chi-squared test with the same correction threshold
-+ Only connections surviving both corrections are retained as final biomarkers
++ #acrpl("PC") significantly associated with the target after #link("https://en.wikipedia.org/wiki/False_discovery_rate#Benjamini%E2%80%93Hochberg_procedure", acr("FDR-BH")) correction ($q < 0.05$) are selected
++ Their #acr("FC") weights are tested via a #link("https://en.wikipedia.org/wiki/Chi-squared_test", "chi-squared test") with the same correction threshold
++ Only #acrpl("FC") surviving the corrections are retained as final biomarkers
 
 During replication of the original paper's pipeline, the plots generated during #acr("PC") association testing were found to have missing labels and incomplete titles. This issue was fixed in another #link("https://github.com/Ayumu722/pca-based-feature-extraction/pull/3", acr("PR")).
 
-After running the extraction pipeline on both datasets, the selected #acr("FC")s for PC 2 were plotted on brain surface maps using a combined parcellation of 446 ROIs: 360 cortical regions from the Glasser et al., 2016 #super[@Glasser2016] atlas, 54 subcortical regions from the Tian et al., 2020 #super[@Tian2020] atlas, and 32 cerebellar regions from the Nettekoven et al., 2024 #super[@nettekoven2024] atlas. Functional network assignments were derived from the Yeo et al., 2011 #super[@Yeo2011] 7-network parcellation. Each selected connection was visualized as an edge between brain regions, color-coded by direction of effect: red indicating over-connectivity in #acr("MDD") relative to healthy controls, and blue indicating under-connectivity. Nodes were colored according to their functional network assignment (Visual, SomatoMotor, DorsalAttention, DefaultMode, Limbic, Salience, PrefrontalControl, Subcortical, or Cerebellum).
+After running the extraction pipeline on both datasets, the selected #acrpl("FC") for the second #acr("PC") were plotted on brain surface maps using a combined parcellation of 446 #acrpl("ROI"): 360 cortical regions from the Glasser et al., 2016 #super[@Glasser2016] atlas, 54 subcortical regions from the Tian et al., 2020 #super[@Tian2020] atlas, and 32 cerebellar regions from the Nettekoven et al., 2024 #super[@nettekoven2024] atlas. Functional network assignments were derived from the Yeo et al., 2011 #super[@Yeo2011] 7-network parcellation. Each selected #acr("FC") connection was visualized as an edge between brain regions, color-coded by direction of effect: red indicating over-connectivity in #acr("MDD") relative to healthy controls, and blue indicating under-connectivity. Nodes were colored according to their functional network assignment (Visual, SomatoMotor, DorsalAttention, DefaultMode, Limbic, Salience, PrefrontalControl, Subcortical, or Cerebellum).
 
 Network statistics were also computed to quantify the distribution of selected connections across brain networks, including the number of participating nodes per network, the proportion of intra-network versus inter-network edges, and the most frequent inter-network connection pairs.
 
-=== Fc Matrix Regular Extraction
+#pagebreak()
+
+=== FC Matrix Regular Extraction
+
+While @reproduction used #acr("FC") matrices already preprocessed and harmonized by #acr("ATR"), the perturbation strategy described in the next section targets the correlation coefficient computation (```Python np.corrcoef```) used during the #acr("FC") matrices extraction. Reproducing the extraction and harmonization pipeline from the raw parcellated time series was therefore necessary to establish a numerically consistent pipeline before introducing any perturbation.
+
+The starting point was the preprocessed regional time series provided by #acr("ATR") for the SRPB dataset, parcellated according to the Glasser et al., 2016 #super[@Glasser2016] atlas (360 cortical, 54 subcortical, and 32 cerebellar regions, 446 #acrpl("ROI") in total) with global signal regression and band-pass filtering already applied.
+
+#acr("FC") extraction proceeded as follows. First, the regional time series were scrubbed for motion by removing any frame with #acr("FD") exceeding 0.5 mm, together with the immediately subsequent frame. On the retained frames, Pearson correlation matrices were computed using ```Python np.corrcoef``` applied to the transposed time series array. The lower triangular elements of each correlation matrix were extracted, Fisher Z-transformed via `np.arctanh`, and flattened into a subject-level connectivity vector.
+
+Before harmonization, the self-extracted #acr("FC") matrices were validated against the original #acr("ATR")-provided harmonized matrices. For each subject, the Pearson correlation and mean absolute error between the extracted and reference connectivity vectors were computed. The resulting per-subject correlation distribution showed near-perfect agreement, confirming that the extraction pipeline faithfully reproduced the original connectivity values prior to harmonization (@fc-extraction-validation).
+
+#figure(image("./figs/srpb_fc_extraction_validation.png", height: 180pt), caption: [Per-subject Pearson correlation distribution between self-extracted and #acr("ATR")-provided #acr("FC") connectivity vectors before harmonization.])<fc-extraction-validation>
+
+Cross-site harmonization was then performed using the traveling-subject method of Yamashita et al., 2019 #super[#cite(label("10.1371/journal.pbio.3000042"))]. This approach models unwanted variance as a linear combination of subject, site, sampling, and protocol biases. Dummy variables were created for each categorical factor, and the sampling dummies were orthogonalized against the site dummies using a weighted projection to ensure independence between site and sampling effects. The bias estimation was formulated as a constrained regularized least-squares problem, solved efficiently via Cholesky decomposition of the Hessian and Schur-complement elimination of the Lagrange multipliers within the corresponding Karush-Kuhn-Tucker system, avoiding explicit matrix inversion. Generalized cross-validation was used to select the regularization hyperparameter $lambda$.
+
+Once the bias coefficients were estimated, the relevant site and protocol bias terms were subtracted from each regular subject's connectivity vector, yielding harmonized #acr("FC") matrices. The self-harmonized matrices were again compared against the #acr("ATR")-provided harmonized matrices. The near-zero mean difference and high per-subject correlation confirmed that the entire reproduction pipeline from scrubbed time series to harmonized connectivity was numerically consistent with the original #acr("ATR") processing, thereby establishing a valid baseline for the subsequent perturbation experiments (@fc-harmonization-validation). The identical procedure was subsequently applied to the BMB dataset.
+
+#figure(image("./figs/srpb_fc_harmonization_validation.png", height: 180pt), caption: [Per-subject Pearson correlation distribution between self-harmonized and #acr("ATR")-provided harmonized #acr("FC") connectivity vectors.])<fc-harmonization-validation>
+
 
 === FC Matrix Perturbed Extraction
 
+Once the regular #acr("FC") extraction pipeline was validated, a perturbed variant was implemented by executing the `np.corrcoef` correlation computation inside a #link("https://hub.docker.com/layers/verificarlo/fuzzy/v2.0.0-lapack-python3.8.5-numpy-scipy-sklearn/images/sha256-993543dcfc0f40aa5cd2de404b5dccdaeea5673c7fabd39505f47ac5da6eb466", [#acr("MCA")-instrumented Docker container]) provided by Fuzzy. One hundred perturbed extractions were performed on the SRPB dataset ($n = 1667$), while fifteen perturbed extractions were performed on the provided subset of the BMB dataset ($n = 6371$). The lower number of runs for the BMB dataset reflects its larger subject count and corresponding computational cost. Since the individual extractions within each dataset are independent yet computationally demanding, they were executed in parallel, while the two datasets themselves were processed sequentially.
+
 === PCA Dimensionality Reduction Perturbation
+
+=== Perturbed Results Comparison
 
 = Results and Discussion
 
