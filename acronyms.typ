@@ -18,7 +18,7 @@
   "FWHM": "Full Width at Half Maximum",
   "FD": "Framewise Displacement",
   "ROI": ("Region Of Interest", "Regions Of Interest"),
-  "KTT": "Karush–Kuhn–Tucker",
+  "KKT": "Karush–Kuhn–Tucker",
   "LLM": "Large Language Model",
   // French
   "IRMf": "Imagerie par Résonance Magnétique Fonctionnelle",

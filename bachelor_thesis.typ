@@ -11,6 +11,8 @@
   authors: "Olivier Amacker",
   language: doc_language, // must be defined globally, see above
 
+  signature: image("figs/signature.png", height: 40pt),
+
   thesis-supervisor: "Prof. Dr Oscar Esteban",
   thesis-co-supervisor: "Dr Okito Yamashita", // Optional, use none if not needed
   thesis-expert: "Dr Ayumu Yamashita", // Optional, use none if not needed
@@ -20,6 +22,7 @@
 
   school: "Haute École d'Ingénierie de Sion",
   programme: "Informatique et Systèmes de communication (ISC)",
+  academic-year: "2025-2026",
 
   // Some keywords related to your thesis
   keywords: ("medical data science", "fMRI", "fMRIPrep", "numerical stability", "bio-markers", "PCA", "neuroimaging", "MDD"),
@@ -52,6 +55,8 @@
 #cleardoublepage()
 #include "pages/résumé.typ"
 
+#include "pages/honneur.typ"
+
 #cleardoublepage()
 #include "pages/acknowledgements.typ"
 
@@ -64,47 +69,8 @@
 // Enable headers and footers from this point on
 #set-header-footer(true)
 
-#todo("Remove")
-
-Writing a report is an exercise that involves both *content* and *form*. In this document, we aim to simplify the formatting aspect without making any assumptions about the content, specifically in the context of the ISC degree programme#footnote[Here is how to add a footnote https://isc.hevs.ch].
-
-== The content of a thesis
-
-The general structure of a bachelor thesis typically includes the following sections:
-
-1. *Abstract*: A concise summary of the thesis, including the research question, methodology, results, and conclusions.
-2. *Résumé*: A summary of the thesis in French.
-3. *Acknowledgements*: [Optional] A section to thank those who supported your work.
-4. *Table of Contents*: An organized list of chapters and sections.
-5. *Introduction*: Presents the background/context, motivation, objectives, and scope and plan of the thesis.
-6. *State of the Art / Literature Review*: Reviews existing research and situates the thesis within the academic context, if relevant to your work.
-7. *Development and Methodology*: Describes the methods, materials, and procedures used in the research/thesis.
-8. *Results*: Presents the findings of the research, often with tables, figures, and analysis.
-9. *Discussion*: Interprets the results, discusses implications, and relates findings to the research question.
-10. *Conclusion*: Summarizes the main findings and contributions, and suggests future work.
-11. *References / Bibliography*: Lists all sources cited in the thesis.
-12. *Appendices*: (Optional) Contains supplementary material such as raw data, code, or additional explanations.
-
 #reset-all-acronyms()
 
-This structure may vary depending on the field of study, but these elements are commonly found in most bachelor theses. They are recommended for the _ISC Bachelor thesis_ and should be adapted to the specific requirements of your thesis (e.g., if you have a state of the art section or not).
-
-You can also change the order or the names of the sections, for instance, if you want to put the state of the art before the introduction, or if you want to add a section on methodology before the results.
-
-== Academic titles
-Please note that the academic titles of your supervisors and experts are important.
-
-They should be included on the cover page, and you should use the correct title when addressing them in the acknowledgements section. For instance, a professor should be addressed as "Prof. [Name]", while a doctor should be addressed as "Dr [Name]" (*without a colon!*). A professor who is also a doctor should be addressed as "Prof. Dr [Name]".
-
-If you are unsure about the title of your supervisor, co-supervisor, or expert, you can ask them directly or check their profile on the university website.
-
-== Compiling the thesis
-
-If you compile your thesis using the `typst` command line tool, or by using the `typst` extension in Visual Studio Code, please note that you must install the fonts used in this template. You can do so by running the following command in your terminal:
-
-```bash
-./fonts/install_fonts.sh
-```
 
 = Introduction <intro>
 
@@ -128,9 +94,10 @@ Second, the focus shifted to the numerical stability of the #acr("FC") matrices 
 
 Finally, the numerical stability of a feature extraction method based on #link("https://en.wikipedia.org/wiki/Principal_component_analysis")[#acr("PCA")] was assessed, building on the work of Yamashita et al., 2026 #super[#cite(label("10.1162/IMAG.a.1121"))]. This method extracts #acr("FC") biomarkers robust to different sites and datasets. The stability assessment involved perturbing the correlation coefficient computation (```Python np.corrcoef```) and forcing the #acr("PCA") to use 32-bit floating-point inputs rather than 64-bit.
 
+
 = State of the Art
 
-In recent years, different tools have been created to help the assessment of numerical variability. Notably #link("https://github.com/verificarlo/verificarlo", "Verificarlo") Denis et al., 2018 #super[@denis2018verificarlocheckingfloatingpoint] which is a tool used to compile programs with #link("https://en.wikipedia.org/wiki/LLVM", "LLVM") level arithmetic perturbations and #link("https://github.com/verificarlo/fuzzy", "Fuzzy") #super[@greg_kiar_2026_20906259] which consists of already perturbed #link("https://www.docker.com/resources/what-container/", "Docker containers") for certain #link("https://www.python.org/","Python") libraries like #link("https://numpy.org/","Numpy") or #link("https://scipy.org/","Scipy"), and more recently #link("https://github.com/big-data-lab-team/fuzzy-pytorch", "Fuzzy PyTorch") Gonzalez-Pepe et al., 2026 #super[@gonzalezpepe2026fuzzypytorchrapidnumerical] which extends this approach to deep learning workflows.
+In recent years, different tools have been created to help the assessment of numerical variability. Notably #link("https://github.com/verificarlo/verificarlo", "Verificarlo") Denis et al., 2018 #super[@denis2018verificarlocheckingfloatingpoint] which is a tool used to compile programs with #link("https://en.wikipedia.org/wiki/LLVM", "LLVM") level arithmetic perturbations and #link("https://github.com/verificarlo/fuzzy", "Fuzzy") #super[@greg_kiar_2026_20906259] which consists of already perturbed #link("https://www.docker.com/resources/what-container/", "Docker containers") for certain #link("https://www.python.org/","Python") libraries like #link("https://numpy.org/","Numpy") or #link("https://scipy.org/","Scipy"). More recently #link("https://github.com/big-data-lab-team/fuzzy-pytorch", "Fuzzy PyTorch") Gonzalez-Pepe et al., 2026 #super[@gonzalezpepe2026fuzzypytorchrapidnumerical] has been released, which extends this approach to deep learning workflows.
 
 These tools rely on #acr("MCA") Parker et al., 1997 #super[@Parker1997MonteCA], a technique that introduces controlled random perturbations to floating-point operations during program execution. By repeatedly running the same pipeline with #acr("MCA") instrumentation, researchers can quantify how numerical variability propagates through computational workflows.
 
@@ -149,7 +116,7 @@ However, these stability conclusions cannot be generalized across pipelines due 
 
 = Development and Methodology <methodology>
 
-This section describes the development process and methodology underlying this thesis. Beyond the thesis-specific code, this work included contributions to external repositories via #acrpl("PR"), including fixes to the #link("https://github.com/ISC-HEI/isc-hei-typst-templates")[ISC-HEI Typst thesis template], enhancements to Yamashita et al.'s #link("https://github.com/Ayumu722/pca-based-feature-extraction")[PCA-based feature extraction package], and a correction to the #acr("NPVR") simulation in Alizadeh et al.'s #link("https://github.com/mina94az/Numerical-Variability-of-functional-MRI-Graph-Measures")[GitHub repository].
+This section describes the development process and methodology underlying this thesis. Beyond the thesis-specific code, this work included contributions to external repositories via #acrpl("PR"), enhancements to Yamashita et al.'s #link("https://github.com/Ayumu722/pca-based-feature-extraction")[PCA-based feature extraction package], and a correction to the #acr("NPVR") simulation in Alizadeh et al. 2026's #link("https://github.com/mina94az/Numerical-Variability-of-functional-MRI-Graph-Measures")[GitHub repository].
 
 == Code availability
 
@@ -223,7 +190,7 @@ where $n_j$ is the number of runs for subject $j$, $m_i$ is the number of subjec
 
 This approach ensures that all available data contributes to the variability estimates, even if some runs are missing.
 
-The remaining analysis followed the same procedure as the original study. After fMRIPrep preprocessing, the Schaefer 2018 parcellation #super[@Schaefer2018] with 100 cortical regions and 7 functional networks was used to extract regional time series using #link("https://nilearn.github.io", "Nilearn")'s NiftiLabelsMasker. Spatial smoothing of 6mm #link("https://en.wikipedia.org/wiki/Full_width_at_half_maximum", acr("FWHM")), temporal standardization, and detrending were applied during masking. The #acr("FC") matrices were computed as Pearson #link("https://en.wikipedia.org/wiki/Correlation_matrix", "correlation matrices") using Nilearn's ConnectivityMeasure, with both with-confound and without-confound versions generated. The matrices were thresholded using absolute correlation values at six thresholds: 0.05, 0.1, 0.2, 0.3, 0.4, and 0.5, retaining both strongly positive and strongly negative correlations. For each threshold, four local graph metrics were computed using #link("https://networkx.org", "NetworkX"): degree centrality, clustering coefficient, betweenness centrality, and eigenvector centrality. Additionally, one global metric was calculated: average shortest path length. The #acr("NPVR") was then computed for each metric and threshold. For visualization purposes, these values were normalized and plotted across brain regions by projecting regional values onto the Schaefer 2018 atlas to assess spatial variability in numerical stability. Additionally, the #acr("NPVR") was computed on the difference between with-confound and without-confound matrices to assess the impact of confound regression, following the approach of the original study.
+The remaining analysis followed the same procedure as the original study. After fMRIPrep preprocessing, the Schaefer 2018 parcellation #super[@Schaefer2018] with 100 cortical regions and 7 functional networks was used to extract regional time series using #link("https://nilearn.github.io", "Nilearn")'s NiftiLabelsMasker. Spatial smoothing of 6mm #link("https://en.wikipedia.org/wiki/Full_width_at_half_maximum", acr("FWHM")), temporal standardization, and detrending were applied during masking. The #acr("FC") matrices were computed as Pearson #link("https://en.wikipedia.org/wiki/Correlation_matrix", "correlation matrices") using Nilearn's ConnectivityMeasure, with both with-confound and without-confound versions generated. The matrices were thresholded using absolute correlation values at six thresholds: 0.05, 0.1, 0.2, 0.3, 0.4, and 0.5, retaining both strongly positive and strongly negative correlations. For each threshold, four local graph metrics were computed using #link("https://networkx.org", "NetworkX"): degree centrality, clustering coefficient, betweenness centrality, and eigenvector centrality. Additionally, one global metric was calculated: average shortest path length. The #acr("NPVR") was then computed for each metric and threshold. For visualization purposes, these values were normalized and plotted across brain regions by projecting regional values onto the Schaefer 2018 atlas to assess spatial variability in numerical stability. Furthermore, the #acr("NPVR") was computed on the difference between with-confound and without-confound matrices to assess the impact of confound regression, following the approach of the original study.
 
 
 == Edge-wise FC Matrix Stability Analysis <fc-matrices-analyses>
@@ -268,19 +235,19 @@ Network statistics were also computed to quantify the distribution of selected c
 
 #pagebreak()
 
-=== FC Matrix Regular Extraction
+=== FC Matrix Regular Extraction and Harmonization Pipeline
 
 While @reproduction used #acr("FC") matrices already preprocessed and harmonized, the perturbation strategy described in the next section targets the correlation coefficient computation (```Python np.corrcoef```) used during the #acr("FC") matrices extraction. Reproducing the extraction and harmonization pipeline from the raw parcellated time series was therefore necessary to establish a numerically consistent pipeline before introducing any perturbation.
 
-The starting point was the preprocessed regional time series provided by #acr("ATR") for the SRPB dataset, parcellated according to the Glasser et al., 2016 #super[@Glasser2016] atlas (360 cortical, 54 subcortical, and 32 cerebellar regions, 446 #acrpl("ROI") in total) with global signal regression and band-pass filtering already applied.
+The starting point was the preprocessed regional time series provided by #acr("ATR") for the SRPB dataset. These time series were parcellated according to the previously described combined parcellation (360 cortical, 54 subcortical, and 32 cerebellar regions, 446 #acrpl("ROI") in total), with global signal regression and band-pass filtering already applied.
 
-#acr("FC") extraction proceeded as follows. First, the regional time series were scrubbed for motion by removing any frame with #acr("FD") exceeding 0.5 mm, together with the immediately subsequent frame. On the retained frames, Pearson correlation matrices were computed using ```Python np.corrcoef``` applied to the transposed time series array. The lower triangular elements of each correlation matrix were extracted, Fisher Z-transformed via `np.arctanh`, and flattened into a subject-level connectivity vector.
+#acr("FC") extraction proceeded as follows. First, the regional time series were scrubbed for motion by removing any frame with #acr("FD") exceeding 0.5 mm, together with the immediately subsequent frame. On the retained frames, Pearson correlation matrices were computed using `np.corrcoef` applied to the transposed time series array. The lower triangular elements of each correlation matrix were extracted, Fisher Z-transformed via `np.arctanh`, and flattened into a subject-level connectivity vector.
 
 Before harmonization, the self-extracted #acr("FC") matrices were validated against the original #acr("ATR")-provided harmonized matrices. For each subject, the Pearson correlation and mean absolute error between the extracted and reference connectivity vectors were computed. The resulting per-subject correlation distribution showed near-perfect agreement, confirming that the extraction pipeline faithfully reproduced the original connectivity values prior to harmonization (@fc-extraction-validation).
 
 #figure(image("./figs/srpb_fc_extraction_validation.png", height: 180pt), caption: [Per-subject Pearson correlation distribution between self-extracted and #acr("ATR")-provided #acr("FC") connectivity vectors before harmonization.])<fc-extraction-validation>
 
-Cross-site harmonization was then performed using the traveling-subject method of Yamashita et al., 2019 #super[#cite(label("10.1371/journal.pbio.3000042"))]. This approach models unwanted variance as a linear combination of subject, site, sampling, and protocol biases. Dummy variables were created for each categorical factor, and the sampling dummies were orthogonalized against the site dummies using a weighted projection to ensure independence between site and sampling effects. The bias estimation was formulated as a constrained regularized least-squares problem. In the corresponding #link("https://en.wikipedia.org/wiki/Karush%E2%80%93Kuhn%E2%80%93Tucker_conditions", acr("KTT")) optimality conditions, the #link("https://en.wikipedia.org/wiki/Hessian_matrix", "Hessian matrix") encodes the second-order curvature of the regularized objective function. Rather than inverting this large matrix directly, the system was solved efficiently by first factorizing the Hessian via #link("https://en.wikipedia.org/wiki/Cholesky_decomposition", "Cholesky decomposition"), then applying a #link("https://en.wikipedia.org/wiki/Schur_complement", "Schur-complement") reduction to eliminate the primal variables and obtain a much smaller linear system for the #link("https://en.wikipedia.org/wiki/Lagrange_multiplier", "Lagrange multipliers"). Generalized cross-validation was used to select the regularization hyperparameter $lambda$.
+Cross-site harmonization was then performed using the traveling-subject method of Yamashita et al., 2019 #super[#cite(label("10.1371/journal.pbio.3000042"))]. This approach models unwanted variance as a linear combination of subject, site, sampling, and protocol biases. Dummy variables were created for each categorical factor, and the sampling dummies were orthogonalized against the site dummies using a weighted projection to ensure independence between site and sampling effects. The bias estimation was formulated as a constrained regularized least-squares problem. In the corresponding #link("https://en.wikipedia.org/wiki/Karush%E2%80%93Kuhn%E2%80%93Tucker_conditions", acr("KKT")) optimality conditions, the #link("https://en.wikipedia.org/wiki/Hessian_matrix", "Hessian matrix") encodes the second-order curvature of the regularized objective function. Rather than inverting this large matrix directly, the system was solved efficiently by first factorizing the Hessian via #link("https://en.wikipedia.org/wiki/Cholesky_decomposition", "Cholesky decomposition"), then applying a #link("https://en.wikipedia.org/wiki/Schur_complement", "Schur-complement") reduction to eliminate the primal variables and obtain a much smaller linear system for the #link("https://en.wikipedia.org/wiki/Lagrange_multiplier", "Lagrange multipliers"). Generalized cross-validation was used to select the regularization hyperparameter $lambda$.
 
 Once the bias coefficients were estimated, the relevant site and protocol bias terms were subtracted from each regular subject's connectivity vector, yielding harmonized #acr("FC") matrices. The self-harmonized matrices were again compared against the #acr("ATR")-provided harmonized matrices. The near-zero mean difference and high per-subject correlation confirmed that the entire reproduction pipeline from scrubbed time series to harmonized connectivity was numerically consistent with the original processing, thereby establishing a valid baseline for the subsequent perturbation experiments (@fc-harmonization-validation). The identical procedure was subsequently applied to the BMB dataset.
 
@@ -289,19 +256,15 @@ Once the bias coefficients were estimated, the relevant site and protocol bias t
 
 === FC Matrix Perturbed Extraction <np-corrcoef>
 
-#todo("Give more details?")
-
 Once the regular pipeline was validated, a perturbed version was implemented by executing `np.corrcoef` inside an #acr("MCA")-instrumented #link("https://hub.docker.com/layers/verificarlo/fuzzy/v2.0.0-lapack-python3.8.5-numpy-scipy-sklearn", [Docker container]) provided by Fuzzy. Within this container, Verificarlo introduces controlled random perturbations to each floating-point operation during correlation computation, simulating numerical noise arising from hardware and #acr("OS") variability. One hundred perturbed extractions were performed on the SRPB dataset ($n = 1667$), while fifteen perturbed extractions were performed on the provided subset of the BMB dataset ($n = 6371$). The lower number of runs for the BMB dataset reflects its larger subject count and corresponding computational cost. Each run yielded a complete set of subject-level connectivity vectors used for numerical stability comparison.
 
 === PCA Dimensionality Reduction Perturbation
-
-#todo("Elaborate?")
 
 Additionally, the #acr("PCA") feature extraction step was also perturbed by using the already #acr("MCA")-perturbed #acr("FC") matrices as inputs, cast to #link("https://en.wikipedia.org/wiki/Single-precision_floating-point_format", "single precision") (32 bits) instead of the default #link("https://en.wikipedia.org/wiki/Double-precision_floating-point_format", "double precision") (64 bits). This reduces the representable precision from approximately 16 to 7 significant decimal digits. The numerical stability assessment therefore reflects the combined effect of both perturbation sources on the same data.
 
 = Results and Discussion
 
-#todo("Explain graphs befor speaking of their meaning? (if time allows)")
+#todo("Explain graphs befor speaking of their meaning?")
 
 This section showcases the results of the three complementary analyses described in @methodology and discusses their implications. First, the reproduction of Alizadeh et al., 2026 #super[@Alizadeh2025.12.22.695524] graph metrics assessment evaluates how numerical variability affects downstream graph measures. Second, the edge-wise #acr("FC") analysis quantifies numerical noise at the level of individual correlations before any graph construction. Third, the stability of the #acr("PCA")-based feature extraction pipeline is assessed under perturbations of both correlation computation and precision reduction.
 
@@ -315,7 +278,7 @@ Because the NPVR simulation relies solely on randomly generated synthetic data a
 
 #pagebreak()
 
-First, the synthetic populations generated in the reproduction closely resemble those presented in the original paper, as shown in @population-fig.
+First, the synthetic populations generated in the reproduction closely resemble those presented in the original paper, this similarity is clearly illustrated by @population-fig.
 
 #figure(
   grid(
@@ -351,9 +314,9 @@ Second, the #acr("NPVR") of both the low and the high variability populations wa
   caption: [Comparison of the original and reproduced #acr("NPVR") variation plots.],
 ) <npvr-plot>
 
-As shown in @npvr-plot, the original and reproduced #acrpl("NPVR") are in close agreement: $0.077$ versus $0.080$ for the low-variability population and $0.253$ versus $0.263$ for the high-variability population. This confirms that, despite minor random differences in the initial populations, the #acr("NPVR") estimations are robust and the reproduction faithfully recovers the original values.
+In @npvr-plot, the original and reproduced #acrpl("NPVR") are in close agreement: $0.077$ versus $0.080$ for the low-variability population and $0.253$ versus $0.263$ for the high-variability population. This confirms that, despite minor random differences in the initial populations, the #acr("NPVR") estimations are robust and the reproduction faithfully recovers the original values.
 
-Third, the relationship between #acr("NPVR"), sample size, and Cohen's $d$ was also visualized. However, unlike the previous two plots, the original and reproduced figures are not expected to match: as detailed in @npvr-simulation, the original code hardcoded the #acr("NPVR") values to $0.287$ and $0.496$ rather than computing them from the generated distributions. The reproduced plot corrects this by using the actual #acr("NPVR") values calculated from the synthetic populations. Because no corrected version of the original figure has been released since the #link("https://github.com/mina94az/Numerical-Variability-of-functional-MRI-Graph-Measures/pull/3", acr("PR")) fixing this issue was merged, the original figure is shown here for reference only.
+Third, the relationship between #acr("NPVR"), sample size, and Cohen's $d$ was also visualized. However, unlike the previous two plots, the original and reproduced figures are not expected to match. As detailed in @npvr-simulation, the original code hardcoded the #acr("NPVR") values to $0.287$ and $0.496$ rather than computing them from the generated distributions. The reproduced plot corrects this by using the actual #acr("NPVR") values calculated from the synthetic populations. Because no corrected version of the original figure has been released since the #link("https://github.com/mina94az/Numerical-Variability-of-functional-MRI-Graph-Measures/pull/3", acr("PR")) fixing this issue was merged, the original figure is shown here for reference only.
 
 #figure(
   grid(
@@ -371,7 +334,7 @@ Third, the relationship between #acr("NPVR"), sample size, and Cohen's $d$ was a
   caption: [Comparison of the original and reproduced effect of the #acr("NPVR") on Cohen's $d$ plots.],
 ) <cohens-fig>
 
-As displayed in @cohens-fig, the visible differences between the two panels confirm that the original published figure was affected. The reproduced plot correctly reflects the computed relationship between the #acr("NPVR"), sample size, and Cohen's $d$.
+Clearly visible in @cohens-fig, the differences between the two panels confirm that the original published figure was affected. The reproduced plot correctly reflects the computed relationship between the #acr("NPVR"), sample size, and Cohen's $d$.
 
 === Graph Metrics Stability Assessment <graph-metrics-assessment>
 
@@ -393,7 +356,7 @@ The reproduction of the graph metrics assessment differed from the original stud
   caption: [Comparison of the original and reproduced #acr("NPVR") values across graph metrics and thresholds],
 ) <graph-metrics-fig>
 
-As shown in @graph-metrics-fig, although the reproduced graph metrics display broadly similar trends, notable differences remain. First, eigenvector centrality increases at the $0.5$ threshold in the reproduced data, whereas it remains at a lower level in the original results. Second, for the average shortest path length, the reproduced #acr("NPVR") at the $0.5$ threshold appears higher than at the $0.1$ threshold, a pattern not observed in the original analysis. Finally, despite the application of a more extensive confound regression strategy, the reproduced #acr("NPVR") values are consistently higher than those originally reported across the different thresholds and graph metrics.
+According to @graph-metrics-fig, although the reproduced graph metrics display broadly similar trends, notable differences remain. First, eigenvector centrality increases at the $0.5$ threshold in the reproduced data, whereas it remains at a lower level in the original results. Second, for the average shortest path length, the reproduced #acr("NPVR") at the $0.5$ threshold appears higher than at the $0.1$ threshold, a pattern not observed in the original analysis. Finally, despite the application of a more extensive confound regression strategy, the reproduced #acr("NPVR") values are consistently higher than those originally reported across the different thresholds and graph metrics.
 
 Given the consistently higher #acr("NPVR") values observed in the reproduction, the effect of confound regression strategies was expected to differ from the original findings.
 In the original paper, applying the six standard translation and rotation confounds consistently increased the #acr("NPVR") for most graph metrics, though betweenness centrality and average shortest path length showed decreased values at the $0.1$ threshold.
@@ -414,11 +377,11 @@ In the original paper, applying the six standard translation and rotation confou
   caption: [Comparison of the #acr("NPVR") difference between without-confound and with-confound strategies across graph metrics and thresholds.],
 ) <graph-metrics-confound-fig>
 
-As shown in @graph-metrics-confound-fig, the reproduced confound regression effects differ substantially from those reported in the original paper. Unlike the original analysis, the reproduced data exhibits a consistently negative difference across all metrics and thresholds, indicating that confound regression uniformly increases the #acr("NPVR") without exception. Moreover, both the magnitude and the variation of this effect are considerably larger in the reproduced data, with differences spanning a much wider range, particularly for clustering coefficient and average shortest path length at higher thresholds. This amplification is likely attributable to the use of more confound regressors rather than to the different dataset, as the effect follows the same direction as the original study, suggesting that the more confounds applied, the greater the increase in #acr("NPVR").
+As @graph-metrics-confound-fig demonstrates, the reproduced confound regression effects differ substantially from those reported in the original paper. Unlike the original analysis, the reproduced data exhibits a consistently negative difference across all metrics and thresholds, indicating that confound regression uniformly increases the #acr("NPVR") without exception. Moreover, both the magnitude and the variation of this effect are considerably larger in the reproduced data, with differences spanning a much wider range, particularly for clustering coefficient and average shortest path length at higher thresholds. This amplification is likely attributable to the use of more confound regressors rather than to the different dataset, as the effect follows the same direction as the original study, suggesting that the more confounds applied, the greater the increase in #acr("NPVR").
 
 #pagebreak()
 
-Finally, the #acr("NPVR") was also evaluated across brain regions and found to vary spatially in both the reproduced and original data. For visualization purposes, these values were normalized per metric to enable comparison across different scales. However, the substantial differences in #acr("NPVR") values between the two analyses result in distinct spatial patterns, making direct visual comparison of the brain surface plots difficult, as shown in @brain-regions-fig.
+Finally, the #acr("NPVR") was also evaluated across brain regions and found to vary spatially in both the reproduced and original data. For visualization purposes, these values were normalized per metric to enable comparison across different scales. However, @brain-regions-fig reveals that the substantial differences in #acr("NPVR") values between the two analyses result in distinct spatial patterns, making direct visual comparison of the brain surface plots difficult.
 
 #todo("Fix scale")
 
@@ -451,14 +414,16 @@ As described in @fc-matrices-analyses, the perturbed fMRIPrep outputs were reuse
   caption: [Heatmap of #acr("NPVR") values across the edges of the #acr("FC") matrix.],
 ) <fc-matrices-heat-fig>
 
-As shown in @fc-matrices-heat-fig, and as expected from the spatial variability observed in @brain-regions-fig, the #acr("NPVR") is not uniformly distributed across the #acr("FC") matrix, ranging from $0.0364$ to $0.2970$. As seen in @fc-matrices-hist-fig, the mean and median values of $0.112$ and $0.118$ respectively represent a substantial amount of numerical variability, corresponding to approximately $11%$ of the population variability across edges.
+The heatmap in @fc-matrices-heat-fig confirms the spatial variability observed in @brain-regions-fig, illustrating that the #acr("NPVR") is not uniformly distributed across the #acr("FC") matrix, ranging from $0.0364$ to $0.2970$. Based on @fc-matrices-hist-fig, the mean and median values of $0.112$ and $0.118$ respectively represent a substantial amount of numerical variability, corresponding to approximately $11%$ of the population variability across edges.
 
 #figure(
   image("./figs/fuzzy-fc-matrices/npvr_histogram.png", height: 200pt),
   caption: [Histogram of #acr("NPVR") values across the edges of the #acr("FC") matrix.],
 ) <fc-matrices-hist-fig>
 
-We assumed in @graph-metrics-assessment that using more confounds would increase the #acr("NPVR"). However, by looking at the effect of the specific global-signal confound, we can confidently say that this is not the case for all confounds. In fact, this specific confound appears to reduce the #acr("NPVR") of the whole #acr("FC") matrix by more than half, as shown in @fc-matrices-delta-fig, with a mean and median delta of $-0.126$ and $-0.119$ respectively, and values ranging from $+0.0362$ to $-0.4337$.
+#pagebreak()
+
+We assumed in @graph-metrics-assessment that using more confounds would increase the #acr("NPVR"). However, by looking at the effect of the specific global-signal confound, we can confidently say that this is not the case for all confounds. In fact, this specific confound appears to reduce the #acr("NPVR") of the whole #acr("FC") matrix by more than half, as quantified in @fc-matrices-delta-fig, with a mean and median delta of $-0.126$ and $-0.119$ respectively, and values ranging from $+0.0362$ to $-0.4337$.
 
 #figure(
   grid(
@@ -543,7 +508,7 @@ Comparing the results across the different perturbed runs allows us to assess wh
   caption: [Effect of numerical perturbation on correlation coefficient computation.],
 ) <fuzzy-corrcoef-effect-fig>
 
-As shown in @fuzzy-corrcoef-effect-fig, the #acr("MCA") perturbation of the `np.corrcoef` function introduces only minimal numerical noise into the resulting coefficients, with a mean absolute difference of $1.656 times 10^(-16)$ and a maximum of $2.419 times 10^(-8)$. These results are consistent with the findings of Denis et al., 2018 #super[@denis2018verificarlocheckingfloatingpoint], who demonstrated that Verificarlo's perturbations remain within the expected bounds of floating-point uncertainty. It is worth noting that the magnitude of these perturbations depends fundamentally on the numerical stability of the perturbed function itself. Less stable operations would be expected to amplify the perturbations more significantly.
+As @fuzzy-corrcoef-effect-fig illustrates, the #acr("MCA") perturbation of the `np.corrcoef` function introduces only minimal numerical noise into the resulting coefficients, with a mean absolute difference of $1.656 times 10^(-16)$ and a maximum of $2.419 times 10^(-8)$. These results are consistent with the findings of Denis et al., 2018 #super[@denis2018verificarlocheckingfloatingpoint], who demonstrated that Verificarlo's perturbations remain within the expected bounds of floating-point uncertainty. It is worth noting that the magnitude of these perturbations depends fundamentally on the numerical stability of the perturbed function itself. Less stable operations would be expected to amplify the perturbations more significantly.
 
 
 #figure(

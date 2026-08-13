@@ -5,18 +5,6 @@
 
 #v(1fr)
 
-#todo("Remove")
-
-- The context and motivation for the research.
-- The main objective or research question.
-- A brief description of the methodology or approach used.
-- The key results or findings.
-- The main conclusion or implications of the work.
-
-The abstract should be self-contained, clear, and usually does not exceed 250–300 words. It allows readers to quickly understand the purpose and outcomes of the thesis without reading the full document.
-
-The abstract *must* be written in both French and English.
-
 #todo("Double check")
 
 As #link("https://en.wikipedia.org/wiki/Functional_magnetic_resonance_imaging")[#acr("fMRI")] pipelines become more computationally heavy, requiring high-dimensional computations, it is crucial to assess how small numerical variability introduced by several different factors like the running #link("https://en.wikipedia.org/wiki/Operating_system")[#acr("OS")], parallelization strategies, and hardware architecture affects the results of these pipelines.
