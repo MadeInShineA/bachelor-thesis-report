@@ -55,6 +55,11 @@
 #cleardoublepage()
 #include "pages/acknowledgements.typ"
 
+#let ai-notice(body) = {
+   footnote(numbering: _ => [])[#body]
+   counter(footnote).update(n => n - 1)
+ }
+
 
 // Enable headers and footers from this point on
 #set-header-footer(true)
@@ -102,11 +107,16 @@ If you compile your thesis using the `typst` command line tool, or by using the 
 ```
 
 = Introduction <intro>
+
+#ai-notice[#acrpl("LLM") were used during the writing of this report exclusively to reformulate sentences and correct typographical and grammatical errors. They were never used to generate text from scratch.]
+
 #link("https://en.wikipedia.org/wiki/Functional_magnetic_resonance_imaging")[#acr("fMRI")] has revolutionized neuroscience by enabling non-invasive observation of brain activity through blood oxygenation level-dependent signals. A key application is the analysis of #acr("FC"), which examines temporal correlations between spatially distinct brain regions to construct connectivity matrices. These matrices serve as the foundation for deriving graph-theoretical metrics and biomarkers used in clinical research, particularly for conditions such as #link("https://en.wikipedia.org/wiki/Major_depressive_disorder")[#acr("MDD")].
 
 As #acr("fMRI") pipelines become increasingly computationally intensive, involving high-dimensional matrix operations and complex preprocessing steps, the question of numerical reliability becomes crucial. Small numerical perturbations introduced by factors such as #link("https://en.wikipedia.org/wiki/Operating_system")[#acr("OS")] differences (as you can see on @os-differences), hardware architecture, and parallelization strategies can propagate through the pipeline, potentially affecting downstream results.
 
-#figure(image("./figs/os_result_difference.png", height: 250pt), caption: [Example of the same program giving different results depending on the #acr("OS")])<os-differences>
+#figure(image("./figs/os_result_difference.png", height: 200pt), caption: [Example of the same program giving different results depending on the #acr("OS")])<os-differences>
+
+#pagebreak()
 
 In the context of multi-site studies and clinical applications, where reproducibility is essential, understanding and quantifying this numerical variability is critical. Unstable biomarkers could lead to unreliable clinical decisions or failed replication across research sites. However, systematic assessment of numerical stability in #acr("fMRI") pipelines remains limited, particularly for advanced feature extraction methods.
 
@@ -130,9 +140,10 @@ In structural imaging pipelines, Mirhakimi et al., 2025 #super[@mirhakimi2025num
 
 In diffusion imaging pipelines, Kiar et al., 2021 #super[@kiar2021] showed that numerical uncertainty in analytical workflows leads to impactful variability in brain network measurements, revealing that different computational environments can produce substantially different connectivity results.
 
-#pagebreak()
 
 Interestingly, numerical variability has also been used as a resource rather than a limitation. Gonzalez-Pepe et al., 2026 #super[@gonzalezpepe2026fuzzypytorchrapidnumerical] established that controlled numerical perturbations can serve as an effective data augmentation strategy for deep learning models, artificially expanding training datasets and improving model generalization.
+
+#pagebreak()
 
 However, these stability conclusions cannot be generalized across pipelines due to heterogeneous methodologies and implementations. While graph-theoretical metrics have been studied by Alizadeh et al., 2026 #super[@Alizadeh2025.12.22.695524], edge-wise #acr("FC") matrix stability remains unexplored. Additionally, the #acr("PCA")-based feature extraction proposed by Yamashita et al., 2026 #super[#cite(label("10.1162/IMAG.a.1121"))] has shown robustness across different sites and datasets, making its numerical stability verification crucial. This thesis addresses these gaps through edge-wise #acr("FC") analysis and #acr("PCA")-based extraction evaluation.
 
@@ -276,7 +287,7 @@ Once the bias coefficients were estimated, the relevant site and protocol bias t
 #figure(image("./figs/srpb_fc_harmonization_validation.png", height: 180pt), caption: [Per-subject Pearson correlation distribution between self-harmonized and #acr("ATR")-provided harmonized #acr("FC") connectivity vectors.])<fc-harmonization-validation>
 
 
-=== FC Matrix Perturbed Extraction
+=== FC Matrix Perturbed Extraction <np-corrcoef>
 
 #todo("Give more details?")
 
@@ -290,7 +301,7 @@ Additionally, the #acr("PCA") feature extraction step was also perturbed by usin
 
 = Results and Discussion
 
-#todo("Explain graphs befor speaking of their meaning?")
+#todo("Explain graphs befor speaking of their meaning? (if time allows)")
 
 This section showcases the results of the three complementary analyses described in @methodology and discusses their implications. First, the reproduction of Alizadeh et al., 2026 #super[@Alizadeh2025.12.22.695524] graph metrics assessment evaluates how numerical variability affects downstream graph measures. Second, the edge-wise #acr("FC") analysis quantifies numerical noise at the level of individual correlations before any graph construction. Third, the stability of the #acr("PCA")-based feature extraction pipeline is assessed under perturbations of both correlation computation and precision reduction.
 
@@ -301,6 +312,8 @@ This part reproduced both analyses of Alizadeh et al., 2026 #super[@Alizadeh2025
 === NPVR Simulation
 
 Because the NPVR simulation relies solely on randomly generated synthetic data and the different factors except the small amount of randomness were preserved, the results were expected to closely match those of the original paper. This is examined for each of the three visualisations below.
+
+#pagebreak()
 
 First, the synthetic populations generated in the reproduction closely resemble those presented in the original paper, as shown in @population-fig.
 
@@ -342,28 +355,27 @@ As shown in @npvr-plot, the original and reproduced #acrpl("NPVR") are in close 
 
 Third, the relationship between #acr("NPVR"), sample size, and Cohen's $d$ was also visualized. However, unlike the previous two plots, the original and reproduced figures are not expected to match: as detailed in @npvr-simulation, the original code hardcoded the #acr("NPVR") values to $0.287$ and $0.496$ rather than computing them from the generated distributions. The reproduced plot corrects this by using the actual #acr("NPVR") values calculated from the synthetic populations. Because no corrected version of the original figure has been released since the #link("https://github.com/mina94az/Numerical-Variability-of-functional-MRI-Graph-Measures/pull/3", acr("PR")) fixing this issue was merged, the original figure is shown here for reference only.
 
-#todo("Improve upper legend")
 #figure(
   grid(
     columns: (1fr, 1fr),
     gutter: 1em,
     align(center)[
-      #text(size: 0.8em)[Original: hardcoded NPVR]
+      #text(size: 0.8em)[Original: hardcoded NPVR Cohen's $d$ effect]
       #image("./figs/npvr-simulation-original/cohens.png", width: 100%)
     ],
     align(center)[
-      #text(size: 0.8em)[Reproduced: computed NPVR]
+      #text(size: 0.8em)[Reproduced: computed NPVR Cohen's $d$ effect]
       #image("./figs/npvr-simulation/cohens.png", width: 100%)
     ],
   ),
   caption: [Comparison of the original and reproduced effect of the #acr("NPVR") on Cohen's $d$ plots.],
 ) <cohens-fig>
 
-As displayed in @cohens-fig, the visible differences between the two panels confirms that the original published figure was affected. The reproduced plot correctly reflects the computed relationship between the #acr("NPVR"), sample size, and Cohen's $d$.
+As displayed in @cohens-fig, the visible differences between the two panels confirm that the original published figure was affected. The reproduced plot correctly reflects the computed relationship between the #acr("NPVR"), sample size, and Cohen's $d$.
 
-=== Graph Metrics Stability Assessment
+=== Graph Metrics Stability Assessment <graph-metrics-assessment>
 
-The reproduction of the graph metrics assessment differed from the original study in two notable ways, as detailed in @graph-section. First, a different multi-site dataset was used as input for the perturbed fMRIPrep runs. Second, a more extensive confound regression strategy was applied (15 confounds versus the original 6). These methodological differences make direct quantitative comparison of the #acr("NPVR") values difficult, as any observed difference could originate from the data characteristics or the confound strategy rather than from the reproduction itself. Nevertheless, across the five computed graph metrics, the reproduced #acr("NPVR") values—computed by aggregating all runs, including both with-confound and without-confound matrices—showed trends consistent with those reported by the original paper.
+The reproduction of the graph metrics assessment differed from the original study in two notable ways, as detailed in @graph-section. First, a different multi-site dataset was used as input for the perturbed fMRIPrep runs. Second, a more extensive confound regression strategy was applied (15 confounds versus the original 6). These methodological differences make direct quantitative comparison of the #acr("NPVR") values difficult, as any observed difference could originate from the data characteristics or the confound strategy rather than from the reproduction itself. Nevertheless, across the five computed graph metrics, the reproduced #acr("NPVR") values computed by aggregating all runs, including both with-confound and without-confound matrices showed trends consistent with those reported by the original paper.
 
 #figure(
   grid(
@@ -404,6 +416,8 @@ In the original paper, applying the six standard translation and rotation confou
 
 As shown in @graph-metrics-confound-fig, the reproduced confound regression effects differ substantially from those reported in the original paper. Unlike the original analysis, the reproduced data exhibits a consistently negative difference across all metrics and thresholds, indicating that confound regression uniformly increases the #acr("NPVR") without exception. Moreover, both the magnitude and the variation of this effect are considerably larger in the reproduced data, with differences spanning a much wider range, particularly for clustering coefficient and average shortest path length at higher thresholds. This amplification is likely attributable to the use of more confound regressors rather than to the different dataset, as the effect follows the same direction as the original study, suggesting that the more confounds applied, the greater the increase in #acr("NPVR").
 
+#pagebreak()
+
 Finally, the #acr("NPVR") was also evaluated across brain regions and found to vary spatially in both the reproduced and original data. For visualization purposes, these values were normalized per metric to enable comparison across different scales. However, the substantial differences in #acr("NPVR") values between the two analyses result in distinct spatial patterns, making direct visual comparison of the brain surface plots difficult, as shown in @brain-regions-fig.
 
 #todo("Fix scale")
@@ -426,10 +440,9 @@ Finally, the #acr("NPVR") was also evaluated across brain regions and found to v
 
 In summary, the reproduction of Alizadeh et al., 2026 #super[@Alizadeh2025.12.22.695524] produced interesting results. The NPVR simulation on synthetic data was faithfully reproduced, yielding results closely matching the original and enabling the identification and correction of a bug in the original code. The graph metrics assessment showed broadly consistent trends across thresholds and metrics, though the reproduced #acr("NPVR") values were consistently higher than those originally reported. The confound regression analysis revealed that the additional regressors applied in the reproduction uniformly increased the #acr("NPVR") across all metrics and thresholds. This is consistent with the original findings, which showed that even the six standard confounds increased the #acr("NPVR") for most metrics, suggesting that the more confounds applied, the greater the increase in #acr("NPVR"). Finally, while spatial variability of #acr("NPVR") across brain regions was observed in both analyses, the substantial differences in #acr("NPVR") values prevented direct visual comparison of the brain surface plots. Overall, these results suggest that while the general patterns of numerical variability are reproducible, the specific #acr("NPVR") values are sensitive to dataset characteristics and preprocessing choices, particularly the confound regression strategy.
 
+#pagebreak()
 
 == Edge-wise FC Matrix Stability Analysis
-
-#todo("REDO WITH FIXED GRAPH")
 
 As described in @fc-matrices-analyses, the perturbed fMRIPrep outputs were reused to assess how the #acr("FC") matrices themselves were affected by numerical perturbations, rather than their derived graph metrics.
 
@@ -438,23 +451,34 @@ As described in @fc-matrices-analyses, the perturbed fMRIPrep outputs were reuse
   caption: [Heatmap of #acr("NPVR") values across the edges of the #acr("FC") matrix.],
 ) <fc-matrices-heat-fig>
 
-As shown in @fc-matrices-heat-fig, and as expected from the spatial variability observed in @brain-regions-fig, the #acr("NPVR") is not uniformly distributed across the #acr("FC") matrix, ranging from $0.0205$ to $0.2165$. However, while this range appears large, the majority of edges exhibit #acr("NPVR") values below $0.1000$ with a with mean and median values of $0.054$ and $0.052$, respectively, as shown in @fc-matrices-hist-fig.
+As shown in @fc-matrices-heat-fig, and as expected from the spatial variability observed in @brain-regions-fig, the #acr("NPVR") is not uniformly distributed across the #acr("FC") matrix, ranging from $0.0364$ to $0.2970$. As seen in @fc-matrices-hist-fig, the mean and median values of $0.112$ and $0.118$ respectively represent a substantial amount of numerical variability, corresponding to approximately $11%$ of the population variability across edges.
 
 #figure(
   image("./figs/fuzzy-fc-matrices/npvr_histogram.png", height: 200pt),
   caption: [Histogram of #acr("NPVR") values across the edges of the #acr("FC") matrix.],
 ) <fc-matrices-hist-fig>
 
-If we now look at the effect of the global signal regression on these #acr("NPVR") values, we can see in @fc-matrices-delta-heat-fig that
+We assumed in @graph-metrics-assessment that using more confounds would increase the #acr("NPVR"). However, by looking at the effect of the specific global-signal confound, we can confidently say that this is not the case for all confounds. In fact, this specific confound appears to reduce the #acr("NPVR") of the whole #acr("FC") matrix by more than half, as shown in @fc-matrices-delta-fig, with a mean and median delta of $-0.126$ and $-0.119$ respectively, and values ranging from $+0.0362$ to $-0.4337$.
 
 #figure(
-  image("./figs/fuzzy-fc-matrices/npvr_delta_heatmap.png", height: 200pt),
-  caption: [Heatmap of the effect of global signal regression on the #acr("NPVR") values across the edges of the #acr("FC") matrix.],
-) <fc-matrices-delta-heat-fig>
+  grid(
+    columns: (1fr, 1fr),
+    gutter: 1em,
+    align(center)[
+      #text(size: 0.8em)[Delta #acr("NPVR") heatmap]
+      #image("./figs/fuzzy-fc-matrices/npvr_delta_heatmap.png", width: 100%)
+    ],
+    align(center)[
+      #text(size: 0.8em)[Delta #acr("NPVR") histogram]
+      #image("./figs/fuzzy-fc-matrices/npvr_delta_histogram.png", width: 100%)
+    ],
+  ),
+  caption: [Effect of global signal regression on the #acr("NPVR") values across the edges of the #acr("FC") matrix.],
+) <fc-matrices-delta-fig>
 
-This means that even if the #acr("NPVR") itself is quite small, it can still propagate up to the downstream analysis, making ...
+The heatmap in @fc-matrices-delta-fig also demonstrates that the #acr("NPVR") reduction is widespread across the entire #acr("FC") matrix rather than concentrated in specific regions, with only a small fraction of edges showing increased variability.
 
-
+To sum it up, the edge-wise analysis revealed substantial numerical variability across the #acr("FC") matrix, with mean and median #acr("NPVR") values of approximately $11%$ of the population variability. The global signal regression confound was found to significantly reduce this variability, halving the #acr("NPVR") across the vast majority of edges. However, this analysis only examined the effect of a single confound. A more comprehensive assessment of how each individual confound contributes to numerical stability would provide valuable insights into optimal preprocessing strategies and could be a promising direction for further analysis.
 
 == PCA-based Feature Extraction Stability
 
@@ -462,34 +486,148 @@ This section presents the results of the #acr("PCA")-based feature extraction pi
 
 === Reproduction on the SRPB and BMB Datasets
 
-The results obtained by the original paper already looked pretty consistent since they used a splitting of the SRPB dataset into a discovery and validation set, and obtained similar results. However, it is still important to see if these results stay similar when taking the entire dataset, or even a different one.
+The results obtained by the original paper already looked pretty consistent since they used a splitting of the SRPB dataset into a discovery and validation set, and obtained similar results. However, it is still important to see if these results stay similar when taking the entire dataset, or even a different one. The comparisons below focus on the second principal component (PC 2), as it consistently emerged as the most informative component across all analyses.
 
 #figure(
   grid(
     columns: 2,
     gutter: 1em,
     grid.cell(colspan: 2, align: center)[
-      #image("./figs/fuzzy-pca-analysis/original_fc_edges.jpeg", width: 100%)
+      #image("./figs/fuzzy-pca-analysis/original_fc_edges.jpeg", height: 150pt)
     ],
     align(center)[
       #text(size: 0.8em)[SRPB: Selected FC connections]
-      #image("./figs/fuzzy-pca-analysis/srpb_original_fc_plot.png", width: 100%)
+      #image("./figs/fuzzy-pca-analysis/srpb_original_fc_plot.png", height: 150pt)
     ],
     align(center)[
       #text(size: 0.8em)[BMB: Selected FC connections]
-      #image("./figs/fuzzy-pca-analysis/bmb_original_fc_plot.png", width: 100%)
+      #image("./figs/fuzzy-pca-analysis/bmb_original_fc_plot.png", height: 150pt)
     ],
   ),
-  caption: [Selected FC connections from the original paper (top) and from the SRPB and BMB datasets (bottom). Red edges indicate over-connectivity in #acr("MDD") relative to healthy controls, blue edges indicate under-connectivity.]
+  caption: [Selected FC connections for #acr("PC") 2 from the original paper (top) and from the SRPB and BMB datasets (bottom). Red edges indicate over-connectivity in #acr("MDD") relative to healthy controls, blue edges indicate under-connectivity.]
 ) <fc-edges-comparison>
 
-@fc-edges-comparison compares the original results (top) with those obtained on the SRPB and BMB datasets (bottom). Red edges indicate over-connectivity in #acr("MDD") relative to healthy controls, blue edges indicate under-connectivity. The specific #acr("FC") connections selected by the #acr("PCA") feature extraction differ across all comparisons: between the discovery and validation splits of the original dataset, between the complete SRPB and BMB datasets, and between each individual dataset and the original splits. However, examining the direction of the connectivity differences reveals a consistent pattern: the vast majority of connections show under-connectivity in #acr("MDD") subjects across all datasets. Furthermore, the PrefrontalControlA network consistently emerges as the most frequently involved, with the PrefrontalControlA-Somatomotor interconnection being the most predominant across all analyses.
+@fc-edges-comparison compares the original results (top) with those obtained on the SRPB and BMB datasets (bottom). Red edges indicate over-connectivity in #acr("MDD") relative to healthy controls, blue edges indicate under-connectivity. The specific #acr("FC") connections selected by the #acr("PCA") feature extraction differ across all comparisons, whether considering the discovery and validation splits of the original dataset, the complete SRPB and BMB datasets, or each individual dataset against the original splits. However, analyzing the direction of the connectivity differences reveals a consistent pattern: the vast majority of connections show under-connectivity in #acr("MDD") subjects across all datasets. The distribution of these connections across functional networks for both full datasets is detailed in @network-stats-fig. While the original paper highlighted thalamic and motor regions as the primary drivers, our analysis reveals a broader and more variable involvement of prefrontal, motor, and subcortical networks. Although the relative dominance of these networks varies between the SRPB and BMB datasets, their consistent presence across analyses suggests they are key drivers of the identified connectivity patterns.
+
+#figure(
+  grid(
+    columns: 2,
+    gutter: 1em,
+    align(center)[
+      #text(size: 0.8em)[SRPB: Edges per network]
+      #image("./figs/fuzzy-pca-analysis/srpb_edge_per_network_original.png", height: 150pt)
+    ],
+    align(center)[
+      #text(size: 0.8em)[SRPB: Inter-connections]
+      #image("./figs/fuzzy-pca-analysis/srpb_inter_connections_original.png", height: 150pt)
+    ],
+    align(center)[
+      #text(size: 0.8em)[BMB: Edges per network]
+      #image("./figs/fuzzy-pca-analysis/bmb_edge_per_network_original.png", height: 150pt)
+    ],
+    align(center)[
+      #text(size: 0.8em)[BMB: Inter-connections]
+      #image("./figs/fuzzy-pca-analysis/bmb_inter_connections_original.png", height: 150pt)
+    ],
+  ),
+  caption: [Network statistics for SRPB and BMB datasets, showing edges per network and inter-network connections.]
+) <network-stats-fig>
 
 
 === Results of the perturbed extraction
 
+Comparing the results across the different perturbed runs allows us to assess whether the #acr("PCA") feature extraction is stable not only across different multi-site datasets, but also under numerical perturbations. We first examine the impact of the `np.corrcoef` perturbations detailed in @np-corrcoef, which target only the correlation computation step.
+
+#figure(
+  image("./figs/fuzzy-pca-analysis/fuzzy-np-corrcoef-effect.png", height: 200pt),
+  caption: [Effect of numerical perturbation on correlation coefficient computation.],
+) <fuzzy-corrcoef-effect-fig>
+
+As shown in @fuzzy-corrcoef-effect-fig, the #acr("MCA") perturbation of the `np.corrcoef` function introduces only minimal numerical noise into the resulting coefficients, with a mean absolute difference of $1.656 times 10^(-16)$ and a maximum of $2.419 times 10^(-8)$. These results are consistent with the findings of Denis et al., 2018 #super[@denis2018verificarlocheckingfloatingpoint], who demonstrated that Verificarlo's perturbations remain within the expected bounds of floating-point uncertainty. It is worth noting that the magnitude of these perturbations depends fundamentally on the numerical stability of the perturbed function itself. Less stable operations would be expected to amplify the perturbations more significantly.
+
+
+#figure(
+  grid(
+    columns: (1fr, 1fr),
+    gutter: 1em,
+    align(center)[
+      #text(size: 0.8em)[SRPB: Original FC connections]
+      #image("./figs/fuzzy-pca-analysis/srpb_original_fc_plot.png", height: 150pt)
+    ],
+    align(center)[
+      #text(size: 0.8em)[SRPB: FC consensus (100 runs)]
+      #image("./figs/fuzzy-pca-analysis/srpb_fc_100_consensus.png", height: 150pt)
+    ],
+    align(center)[
+      #text(size: 0.8em)[BMB: Original FC connections]
+      #image("./figs/fuzzy-pca-analysis/bmb_original_fc_plot.png", height: 150pt)
+    ],
+    align(center)[
+      #text(size: 0.8em)[BMB: FC consensus (15 runs)]
+      #image("./figs/fuzzy-pca-analysis/bmb_fc_100_consensus.png", height: 150pt)
+    ],
+  ),
+  caption: [Comparison of original and consensus #acr("FC") connections for SRPB (top) and BMB (bottom) datasets.]
+) <fc-consensus-fig>
+
+@fc-consensus-fig displays the selected FC connections using the same color scheme: red for over-connectivity and blue for under-connectivity in #acr("MDD") subjects relative to healthy controls. It compares the original results with the consensus connections retained across all perturbed runs for both the SRPB (100 runs) and BMB (15 runs) datasets. The original and consensus plots are identical, demonstrating that the feature extraction process is entirely robust to the introduced numerical perturbations. This is further supported by examining not only the visual representation of the FC connections, but also the computed network statistics. Both the edges per network (@edge-network-consensus-fig) and the inter-connections (@inter-connections-consensus-fig) remain identical between the original and consensus results.
+
+#figure(
+  grid(
+    columns: (1fr, 1fr),
+    gutter: 1em,
+    align(center)[
+      #text(size: 0.8em)[SRPB: Original edges per network]
+      #image("./figs/fuzzy-pca-analysis/srpb_edge_per_network_original.png", height: 130pt)
+    ],
+    align(center)[
+      #text(size: 0.8em)[SRPB: Edges per network consensus (100 runs)]
+      #image("./figs/fuzzy-pca-analysis/srpb_edge_per_network_100_consensus.png", height: 130pt)
+    ],
+    align(center)[
+      #text(size: 0.8em)[BMB: Original edges per network]
+      #image("./figs/fuzzy-pca-analysis/bmb_edge_per_network_original.png", height: 130pt)
+    ],
+    align(center)[
+      #text(size: 0.8em)[BMB: Edges per network consensus (15 runs)]
+      #image("./figs/fuzzy-pca-analysis/bmb_edge_per_network_100_consensus.png", height: 130pt)
+    ],
+  ),
+  caption: [Comparison of original and consensus edges per network for SRPB (top) and BMB (bottom) datasets.]
+) <edge-network-consensus-fig>
+
+#figure(
+  grid(
+    columns: (1fr, 1fr),
+    gutter: 1em,
+    align(center)[
+      #text(size: 0.8em)[SRPB: Original inter-connections]
+      #image("./figs/fuzzy-pca-analysis/srpb_inter_connections_original.png", height: 150pt)
+    ],
+    align(center)[
+      #text(size: 0.8em)[SRPB: Inter-connections consensus (100 runs)]
+      #image("./figs/fuzzy-pca-analysis/srpb_inter_connections_100_consensus.png", height: 150pt)
+    ],
+    align(center)[
+      #text(size: 0.8em)[BMB: Original inter-connections]
+      #image("./figs/fuzzy-pca-analysis/bmb_inter_connections_original.png", height: 150pt)
+    ],
+    align(center)[
+      #text(size: 0.8em)[BMB: Inter-connections consensus (15 runs)]
+      #image("./figs/fuzzy-pca-analysis/bmb_inter_connections_100_consensus.png", height: 150pt)
+    ],
+  ),
+  caption: [Comparison of original and consensus inter-connections for SRPB (top) and BMB (bottom) datasets.]
+) <inter-connections-consensus-fig>
+
+Overall, the reproduction of the #acr("PCA")-based feature extraction on the complete SRPB and BMB datasets confirmed the general pattern of under-connectivity in #acr("MDD") subjects observed in the original study, while revealing a broader and more variable involvement of prefrontal, motor, and subcortical networks. Crucially, the perturbation analysis demonstrated that this pipeline is highly numerically stable. The combined numerical noise introduced during both the correlation computation and the 32-bit #acr("PCA") dimensionality reduction did not propagate to the final selected biomarkers, which remained entirely unchanged across all perturbed runs. This robustness suggests that the method is reliable and resilient to the floating-point variations typically encountered across different computational environments.
 
 = Conclusion
+
+This bachelor thesis successfully achieved its three main objectives. First, it reproduced the findings of Alizadeh et al., 2026 #super[@Alizadeh2025.12.22.695524], identifying and correcting a bug in the original #acr("NPVR") simulation pipeline. The stability of graph metrics was further evaluated using a different multi-site dataset and a more extensive confound regression strategy. Despite these methodological changes, the analyzed graph metrics exhibited trends consistent with the original study, while notably demonstrating that applying a larger number of confounds significantly increases the overall #acr("NPVR") and amplifies its variability across thresholds. Second, it extended the stability analysis to the #acr("FC") matrices themselves, revealing a substantial numerical variability of approximately $11%$ of the population variability across individual edges when using all 15 confounds. While the graph metrics assessment suggested that adding confounds generally increases numerical variability, the global-signal regression proved to be a notable exception, as its inclusion effectively halved the #acr("NPVR") across the vast majority of edges. Third, it evaluated the numerical stability of the #acr("PCA") feature extraction of #acr("MDD") biomarkers proposed by Yamashita et al., 2026 #super(cite(label("10.1162/IMAG.a.1121"))) by perturbing two distinct steps of its pipeline, as well as its generalization when applied to the complete SRPB and BMB datasets. This method consistently selected #acr("FC") connections across similar but broader brain networks, characterized by widespread under-connectivity in #acr("MDD") subjects. However, the relative contribution of these networks varied between datasets. In the SRPB dataset, the Subcortical network was the most represented, with its connection to the PrefrontalControlA network being the most frequent. In the BMB dataset, the PrefrontalControlA network itself, along with its connections to the SomatoMotor network, emerged as the most significant. The perturbations introduced during the correlation computation and the 32-bit #acr("PCA") dimensionality reduction had no effect on the final extracted biomarkers. This confirms that while the specific connectivity patterns vary across datasets, the pipeline's results remain entirely robust to numerical perturbations.
+
+Building on these findings, several promising directions for future research emerge. First, while this study highlighted the contrasting effects of global signal regression, a systematic assessment of the individual contributions of each confound to the #acr("NPVR") would be highly valuable. Understanding which specific regressors introduce the most numerical noise could guide the optimization of preprocessing pipelines for maximum stability. Second, the numerical robustness of the #acr("PCA") feature extraction pipeline could be further stress-tested. Beyond the correlation computation and precision reduction evaluated here, future work could introduce perturbations into the cross-site harmonization step, as well as the confound regression process itself. Ultimately, these extensions would further solidify the reliability of these biomarkers for clinical applications.
+
 
 //#bibliography("bibliography.bib", full: true, style: "ieee", title)
 #pagebreak()
@@ -520,33 +658,3 @@ The results obtained by the original paper already looked pretty consistent sinc
 
 // Table of listings
 #table-of-figures()
-
-// Code inclusion
-#pagebreak()
-#code-samples()
-
-#let code_sample = read("code/sample.scala")
-
-#figure(
-  code()[
-    #raw(code_sample, lang: "scala")
-  ],
-  caption: "Code included from the file example.scala",
-)
-
-#figure(
-  code()[
-    #raw(read("code/sort.py"), lang: "python")
-  ],
-  caption: "Second code included from the file example.scala",
-)
-
-#figure(
-  code()[
-    #raw(code_sample, lang: "scala")
-  ],
-  caption: "Second code included from the file example.scala",
-)
-
-
-// This is the end, folks!

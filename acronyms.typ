@@ -19,6 +19,7 @@
   "FD": "Framewise Displacement",
   "ROI": ("Region Of Interest", "Regions Of Interest"),
   "KTT": "Karush–Kuhn–Tucker",
+  "LLM": "Large Language Model",
   // French
   "IRMf": "Imagerie par Résonance Magnétique Fonctionnelle",
   "SE": "Système d'Exploitation",
