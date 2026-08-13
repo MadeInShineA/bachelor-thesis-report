@@ -17,8 +17,9 @@
   thesis-co-supervisor: "Dr Okito Yamashita", // Optional, use none if not needed
   thesis-expert: "Dr Ayumu Yamashita", // Optional, use none if not needed
   thesis-id: "ISC-ID-26-1", // Your thesis ID (from the official project description)
-  hide-completeness-warning: false,
+  hide-completeness-warning: true,
   project-repos: "https://github.com/madeinshinea/bachelor-thesis", // Your project git repository.
+
 
   school: "Haute École d'Ingénierie de Sion",
   programme: "Informatique et Systèmes de communication (ISC)",
