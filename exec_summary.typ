@@ -40,7 +40,7 @@ Graph metrics reproduction showed consistent trends with the original study acro
 At the edge level, FC matrices exhibited substantial variability, with a mean NPVR of approximately 11% using 15 confounds. Notably, the inclusion of global signal regression halved this variability across most edges, suggesting it acts as a strong stabilizer against floating-point perturbations.
 
 
-PCA-based feature extraction proved robust across datasets and perturbations. The pattern of MDD under-connectivity remained consistent (prefrontal, motor, and subcortical regions), and selected biomarkers were identical across all 100 perturbed runs on SRPB and 15 on BMB.
+PCA-based feature extraction proved robust across datasets and perturbations. The pattern of MDD under-connectivity remained consistent (prefrontal, motor, and subcortical regions), and selected biomarkers were identical across all 100 perturbed runs on the SRPB dataset and 15 on the BMB one.
 
 #figure(
   grid(
