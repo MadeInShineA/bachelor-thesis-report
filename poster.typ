@@ -13,7 +13,7 @@
   title: "Numerical Stability of Functional MRI\nConnectivity Biomarkers",
   subtitle: none,
   student: "Olivier Amacker",
-  permanent-email: "olivier.amacker@hevs.ch",
+  permanent-email: "olivier.amacker@netplus.ch",
   supervisor: "Prof. Dr Oscar Esteban",
   co-supervisor: "Dr Okito Yamashita",
   expert: "Dr Ayumu Yamashita",
@@ -38,7 +38,7 @@
   As pipelines become more computationally intensive, small perturbations from #acr("OS") differences, hardware, and parallelization can propagate and affect results.
 
   #figure(
-    image("figs/os_result_difference.png", height: 10cm),
+    image("figs/os_result_difference.png", height: 13.5cm),
     caption: [Same program, different results across operating systems.],
   )
 ]
