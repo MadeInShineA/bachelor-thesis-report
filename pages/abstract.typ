@@ -17,7 +17,7 @@ To reproduce the results of the original study #super[@Alizadeh2025.12.22.695524
 
 For the assessment of the #acr("PCA") feature selection, two steps of the pipeline were perturbated: the correlation coefficient computation using a #link("https://hub.docker.com/layers/verificarlo/fuzzy/v2.5.1-lapack-python3.12.13-numpy-scipy-sklearn/images/sha256-5fd0dff51fd585689ec2ab200c38f89c3cb58138a4604d41c92849ec8e619f5c", [specific Fuzzy Docker image]), and the principal component analysis by forcing it to use 32-bit floating-point inputs rather than 64-bit.
 
-The results given by the original work reproduction closely matched the original ones, except for a specific graph where the Y-axis values were hardcoded inside the original code. The #acr("PCA") feature extraction appeared to be very stable under the introduced numerical perturbations, simulating #acr("OS") level numerical variability. Giving the exact same results.
+The results given by the original work reproduction closely matched the original ones, except for a specific graph where the Y-axis values were hardcoded inside the original code. The #acr("PCA") feature extraction appeared to be very stable under the introduced numerical perturbations, simulating #acr("OS") level numerical variability, yielding the exact same results.
 
 These findings suggest that the PCA features extraction is not only stable across different imaging sites and datasets, but also robust to numerical variability.
 

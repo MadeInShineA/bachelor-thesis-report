@@ -79,7 +79,7 @@
 
 #link("https://en.wikipedia.org/wiki/Functional_magnetic_resonance_imaging")[#acr("fMRI")] has revolutionized neuroscience by enabling non-invasive observation of brain activity through blood oxygenation level-dependent signals. A key application is the analysis of #acr("FC"), which examines temporal correlations between spatially distinct brain regions to construct connectivity matrices. These matrices serve as the foundation for deriving graph-theoretical metrics and biomarkers used in clinical research, particularly for conditions such as #link("https://en.wikipedia.org/wiki/Major_depressive_disorder")[#acr("MDD")].
 
-As #acr("fMRI") pipelines become increasingly computationally intensive, involving high-dimensional matrix operations and complex preprocessing steps, the question of numerical reliability becomes crucial. Small numerical perturbations introduced by factors such as #link("https://en.wikipedia.org/wiki/Operating_system")[#acr("OS")] differences (as you can see on @os-differences), hardware architecture, and parallelization strategies can propagate through the pipeline, potentially affecting downstream results.
+As #acr("fMRI") pipelines become increasingly computationally intensive, involving high-dimensional matrix operations and complex preprocessing steps, the question of numerical reliability becomes crucial. Small numerical perturbations introduced by factors such as #link("https://en.wikipedia.org/wiki/Operating_system")[#acr("OS")] differences (as shown in @os-differences), hardware architecture, and parallelization strategies can propagate through the pipeline, potentially affecting downstream results.
 
 #figure(image("./figs/os_result_difference.png", height: 200pt), caption: [Example of the same program giving different results depending on the #acr("OS")])<os-differences>
 
@@ -244,13 +244,13 @@ The starting point was the preprocessed regional time series provided by #acr("A
 
 #acr("FC") extraction proceeded as follows. First, the regional time series were scrubbed for motion by removing any frame with #acr("FD") exceeding 0.5 mm, together with the immediately subsequent frame. On the retained frames, Pearson correlation matrices were computed using `np.corrcoef` applied to the transposed time series array. The lower triangular elements of each correlation matrix were extracted, Fisher Z-transformed via `np.arctanh`, and flattened into a subject-level connectivity vector.
 
-Before harmonization, the self-extracted #acr("FC") matrices were validated against the original #acr("ATR")-provided harmonized matrices. For each subject, the Pearson correlation and mean absolute error between the extracted and reference connectivity vectors were computed. The resulting per-subject correlation distribution showed near-perfect agreement, confirming that the extraction pipeline faithfully reproduced the original connectivity values prior to harmonization (@fc-extraction-validation).
+Before harmonization, the self-extracted #acr("FC") matrices were validated against the original #acr("ATR")-provided harmonized matrices. For each subject, the Pearson correlation and mean absolute error between the extracted and reference connectivity vectors were computed. The resulting per-subject correlation distribution showed near-perfect agreement (mean: $0.9970$, median: $0.9967$, min: $0.9852$), confirming that the extraction pipeline faithfully reproduced the original connectivity values prior to harmonization (@fc-extraction-validation).
 
 #figure(image("./figs/srpb_fc_extraction_validation.png", height: 180pt), caption: [Per-subject Pearson correlation distribution between self-extracted and #acr("ATR")-provided #acr("FC") connectivity vectors before harmonization.])<fc-extraction-validation>
 
 Cross-site harmonization was then performed using the traveling-subject method of Yamashita et al., 2019 #super[#cite(label("10.1371/journal.pbio.3000042"))]. This approach models unwanted variance as a linear combination of subject, site, sampling, and protocol biases. Dummy variables were created for each categorical factor, and the sampling dummies were orthogonalized against the site dummies using a weighted projection to ensure independence between site and sampling effects. The bias estimation was formulated as a constrained regularized least-squares problem. In the corresponding #link("https://en.wikipedia.org/wiki/Karush%E2%80%93Kuhn%E2%80%93Tucker_conditions", acr("KKT")) optimality conditions, the #link("https://en.wikipedia.org/wiki/Hessian_matrix", "Hessian matrix") encodes the second-order curvature of the regularized objective function. Rather than inverting this large matrix directly, the system was solved efficiently by first factorizing the Hessian via #link("https://en.wikipedia.org/wiki/Cholesky_decomposition", "Cholesky decomposition"), then applying a #link("https://en.wikipedia.org/wiki/Schur_complement", "Schur-complement") reduction to eliminate the primal variables and obtain a much smaller linear system for the #link("https://en.wikipedia.org/wiki/Lagrange_multiplier", "Lagrange multipliers"). Generalized cross-validation was used to select the regularization hyperparameter $lambda$.
 
-Once the bias coefficients were estimated, the relevant site and protocol bias terms were subtracted from each regular subject's connectivity vector, yielding harmonized #acr("FC") matrices. The self-harmonized matrices were again compared against the #acr("ATR")-provided harmonized matrices. The near-zero mean difference and high per-subject correlation confirmed that the entire reproduction pipeline from scrubbed time series to harmonized connectivity was numerically consistent with the original processing, thereby establishing a valid baseline for the subsequent perturbation experiments (@fc-harmonization-validation). The identical procedure was subsequently applied to the BMB dataset.
+Once the bias coefficients were estimated, the relevant site and protocol bias terms were subtracted from each regular subject's connectivity vector, yielding harmonized #acr("FC") matrices. The self-harmonized matrices were again compared against the #acr("ATR")-provided harmonized matrices. The near-zero mean difference and high per-subject correlation (mean: $0.9999$, median: $0.9999$, min: $0.9996$) confirmed that the entire reproduction pipeline from scrubbed time series to harmonized connectivity was numerically consistent with the original processing, thereby establishing a valid baseline for the subsequent perturbation experiments (@fc-harmonization-validation). The identical procedure was subsequently applied to the BMB dataset.
 
 #figure(image("./figs/srpb_fc_harmonization_validation.png", height: 180pt), caption: [Per-subject Pearson correlation distribution between self-harmonized and #acr("ATR")-provided harmonized #acr("FC") connectivity vectors.])<fc-harmonization-validation>
 
@@ -265,8 +265,6 @@ Additionally, the #acr("PCA") feature extraction step was also perturbed by usin
 
 = Results and Discussion
 
-#todo("Explain graphs befor speaking of their meaning?")
-
 This section showcases the results of the three complementary analyses described in @methodology and discusses their implications. First, the reproduction of Alizadeh et al., 2026 #super[@Alizadeh2025.12.22.695524] graph metrics assessment evaluates how numerical variability affects downstream graph measures. Second, the edge-wise #acr("FC") analysis quantifies numerical noise at the level of individual correlations before any graph construction. Third, the stability of the #acr("PCA")-based feature extraction pipeline is assessed under perturbations of both correlation computation and precision reduction.
 
 == Reproduction of Alizadeh et al., 2026
@@ -279,7 +277,7 @@ Because the NPVR simulation relies solely on randomly generated synthetic data a
 
 #pagebreak()
 
-First, the synthetic populations generated in the reproduction closely resemble those presented in the original paper, this similarity is clearly illustrated by @population-fig.
+First, the synthetic populations generated in the reproduction closely resemble those presented in the original paper. This similarity is clearly illustrated by @population-fig.
 
 #figure(
   grid(
@@ -298,7 +296,7 @@ First, the synthetic populations generated in the reproduction closely resemble 
 
 Although the exact population values differ because `np.random.normal` produces independent random draws, the low and high variability groups display the same distributional characteristics as in the original analysis. This confirms that the population generation step is correctly implemented and reproducible.
 
-Second, the #acr("NPVR") of both the low and the high variability populations was calculated and plotted relatively to how the #acr("NPVR") changes depending of the numerical and population variability.
+Second, the #acr("NPVR") of both the low and the high variability populations was calculated and plotted relatively to how the #acr("NPVR") changes depending on the numerical and population variability.
 
 #figure(
   grid(
@@ -384,27 +382,25 @@ As @graph-metrics-confound-fig demonstrates, the reproduced confound regression 
 
 Finally, the #acr("NPVR") was also evaluated across brain regions and found to vary spatially in both the reproduced and original data. For visualization purposes, these values were normalized per metric to enable comparison across different scales. However, @brain-regions-fig reveals that the substantial differences in #acr("NPVR") values between the two analyses result in distinct spatial patterns, making direct visual comparison of the brain surface plots difficult.
 
-#todo("Fix scale")
 
 #figure(
   grid(
-    columns: (1fr, 1fr),
+    columns: 1,
     gutter: 1em,
     align(center)[
       #text(size: 0.8em)[Original: Degree centrality across brain regions]
-      #image("./figs/graph-metrics-original/npvr_across_brain_regions.png", width:100%)
+      #image("./figs/graph-metrics-original/npvr_across_brain_regions.png", width: 80%)
     ],
     align(center)[
       #text(size: 0.8em)[Reproduced: Degree centrality across brain regions]
-      #image("./figs/graph-metrics/npvr_across_brain_regions.png", width: 100%)
+      #image("./figs/graph-metrics/npvr_across_brain_regions.png", width: 80%)
     ],
   ),
-  caption: [Comparison of the #acr("NPVR") across the different brain regions and thresholds for the degree centrality metric],
+  caption: [Comparison of the #acr("NPVR") across the different brain regions and thresholds for the degree centrality metric.],
 ) <brain-regions-fig>
 
-In summary, the reproduction of Alizadeh et al., 2026 #super[@Alizadeh2025.12.22.695524] produced interesting results. The NPVR simulation on synthetic data was faithfully reproduced, yielding results closely matching the original and enabling the identification and correction of a bug in the original code. The graph metrics assessment showed broadly consistent trends across thresholds and metrics, though the reproduced #acr("NPVR") values were consistently higher than those originally reported. The confound regression analysis revealed that the additional regressors applied in the reproduction uniformly increased the #acr("NPVR") across all metrics and thresholds. This is consistent with the original findings, which showed that even the six standard confounds increased the #acr("NPVR") for most metrics, suggesting that the more confounds applied, the greater the increase in #acr("NPVR"). Finally, while spatial variability of #acr("NPVR") across brain regions was observed in both analyses, the substantial differences in #acr("NPVR") values prevented direct visual comparison of the brain surface plots. Overall, these results suggest that while the general patterns of numerical variability are reproducible, the specific #acr("NPVR") values are sensitive to dataset characteristics and preprocessing choices, particularly the confound regression strategy.
+The reproduction of Alizadeh et al., 2026 #super[@Alizadeh2025.12.22.695524] produced both confirming and diverging results. The NPVR simulation on synthetic data was faithfully reproduced, yielding results closely matching the original and enabling the identification and correction of a bug in the original code. The graph metrics assessment showed broadly consistent trends across thresholds and metrics, though the reproduced #acr("NPVR") values were consistently higher than those originally reported. The confound regression analysis revealed that the additional regressors applied in the reproduction uniformly increased the #acr("NPVR") across all metrics and thresholds. This is consistent with the original findings, which showed that even the six standard confounds increased the #acr("NPVR") for most metrics, suggesting that the more confounds applied, the greater the increase in #acr("NPVR"). Finally, while spatial variability of #acr("NPVR") across brain regions was observed in both analyses, the substantial differences in #acr("NPVR") values prevented direct visual comparison of the brain surface plots. Overall, these results suggest that while the general patterns of numerical variability are reproducible, the specific #acr("NPVR") values are sensitive to dataset characteristics and preprocessing choices, particularly the confound regression strategy.
 
-#pagebreak()
 
 == Edge-wise FC Matrix Stability Analysis
 
@@ -418,13 +414,13 @@ As described in @fc-matrices-analyses, the perturbed fMRIPrep outputs were reuse
 The heatmap in @fc-matrices-heat-fig confirms the spatial variability observed in @brain-regions-fig, illustrating that the #acr("NPVR") is not uniformly distributed across the #acr("FC") matrix, ranging from $0.0364$ to $0.2970$. Based on @fc-matrices-hist-fig, the mean and median values of $0.112$ and $0.118$ respectively represent a substantial amount of numerical variability, corresponding to approximately $11%$ of the population variability across edges.
 
 #figure(
-  image("./figs/fuzzy-fc-matrices/npvr_histogram.png", height: 200pt),
+  image("./figs/fuzzy-fc-matrices/npvr_histogram.png", height: 146pt),
   caption: [Histogram of #acr("NPVR") values across the edges of the #acr("FC") matrix.],
 ) <fc-matrices-hist-fig>
 
 #pagebreak()
 
-We assumed in @graph-metrics-assessment that using more confounds would increase the #acr("NPVR"). However, by looking at the effect of the specific global-signal confound, we can confidently say that this is not the case for all confounds. In fact, this specific confound appears to reduce the #acr("NPVR") of the whole #acr("FC") matrix by more than half, as quantified in @fc-matrices-delta-fig, with a mean and median delta of $-0.126$ and $-0.119$ respectively, and values ranging from $+0.0362$ to $-0.4337$.
+We assumed in @graph-metrics-assessment that using more confounds would increase the #acr("NPVR"). However, by looking at the effect of the specific global-signal confound, the data demonstrate that this is not the case for all confounds. In fact, this specific confound appears to reduce the #acr("NPVR") of the whole #acr("FC") matrix by more than half, as quantified in @fc-matrices-delta-fig, with a mean and median delta of $-0.126$ and $-0.119$ respectively, and values ranging from $+0.0362$ to $-0.4337$.
 
 #figure(
   grid(
@@ -444,7 +440,7 @@ We assumed in @graph-metrics-assessment that using more confounds would increase
 
 The heatmap in @fc-matrices-delta-fig also demonstrates that the #acr("NPVR") reduction is widespread across the entire #acr("FC") matrix rather than concentrated in specific regions, with only a small fraction of edges showing increased variability.
 
-To sum it up, the edge-wise analysis revealed substantial numerical variability across the #acr("FC") matrix, with mean and median #acr("NPVR") values of approximately $11%$ of the population variability. The global signal regression confound was found to significantly reduce this variability, halving the #acr("NPVR") across the vast majority of edges. However, this analysis only examined the effect of a single confound. A more comprehensive assessment of how each individual confound contributes to numerical stability would provide valuable insights into optimal preprocessing strategies and could be a promising direction for further analysis.
+The edge-wise analysis revealed substantial numerical variability across the #acr("FC") matrix, with mean and median #acr("NPVR") values of approximately $11%$ of the population variability. The global signal regression confound was found to significantly reduce this variability, halving the #acr("NPVR") across the vast majority of edges. However, this analysis only examined the effect of a single confound. A more comprehensive assessment of how each individual confound contributes to numerical stability would provide valuable insights into optimal preprocessing strategies and could be a promising direction for further analysis.
 
 == PCA-based Feature Extraction Stability
 
@@ -452,7 +448,7 @@ This section presents the results of the #acr("PCA")-based feature extraction pi
 
 === Reproduction on the SRPB and BMB Datasets
 
-The results obtained by the original paper already looked pretty consistent since they used a splitting of the SRPB dataset into a discovery and validation set, and obtained similar results. However, it is still important to see if these results stay similar when taking the entire dataset, or even a different one. The comparisons below focus on the second principal component (PC 2), as it consistently emerged as the most informative component across all analyses.
+The results obtained by the original paper already appeared reasonably consistent since they used a splitting of the SRPB dataset into a discovery and validation set, and obtained similar results. However, it is still important to see if these results stay similar when taking the entire dataset, or even a different one. The comparisons below focus on the second principal component (PC 2), as it consistently emerged as the most informative component across all analyses.
 
 #figure(
   grid(
