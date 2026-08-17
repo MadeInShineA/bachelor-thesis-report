@@ -8,7 +8,7 @@
 //
 // Adapted from the BFH year book idea at https://www.bfh.ch/dam/jcr:e512ae31-a3ed-4b65-b589-870383d794b0/abschlussarbeiten-bsc-informatik.pdf
 
-#import "@preview/isc-hei-bthesis:0.8.1"
+#import "@preview/isc-hei-bthesis:0.8.1":*
 
 // Must be <= 365 characters long.
 #let summary = "This thesis investigates the numerical stability of fMRI connectivity biomarkers. Using floating-point perturbations, it assesses graph metrics, connectivity matrices, and PCA-based feature extraction, demonstrating that key biomarkers for depression research remain robust despite computational variability."
