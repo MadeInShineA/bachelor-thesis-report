@@ -2,7 +2,7 @@
 // ISC Poster — Numerical Stability of Functional MRI Connectivity Biomarkers
 // ─────────────────────────────────────────────────────────────────────────────
 
-#import "@preview/isc-hei-poster:0.8.0": isc-poster, isc-card, isc-colbreak
+#import "@preview/isc-hei-poster:0.8.1": isc-poster, isc-card, isc-colbreak
 
 #import "@preview/acrostiche:0.7.0": *
 #include "acronyms.typ"

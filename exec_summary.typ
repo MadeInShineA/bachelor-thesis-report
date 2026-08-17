@@ -8,7 +8,7 @@
 //
 // Adapted from the BFH year book idea at https://www.bfh.ch/dam/jcr:e512ae31-a3ed-4b65-b589-870383d794b0/abschlussarbeiten-bsc-informatik.pdf
 
-#import "@preview/isc-hei-exec-summary:0.8.0" : *
+#import "@preview/isc-hei-bthesis:0.8.1"
 
 // Must be <= 365 characters long.
 #let summary = "This thesis investigates the numerical stability of fMRI connectivity biomarkers. Using floating-point perturbations, it assesses graph metrics, connectivity matrices, and PCA-based feature extraction, demonstrating that key biomarkers for depression research remain robust despite computational variability."
@@ -67,7 +67,7 @@ Graph metrics were successfully reproduced with consistent trends, though at hig
   title: "Numerical Stability of Functional MRI\n Connectivity Biomarkers",
   subtitle: none, // Optional, use none if not needed
   language: "en", // Valid values are [en, fr]
-  authors: "Amacker Olivier",
+  authors: "Olivier Amacker",
   student-picture: image("figs/me.png"), // [Optional], put none if not used
   permanent-email: "olivier.amacker@netplus.ch", // [Optional], put none if not used. Prefer a long term viable address!
   video-url: none, // A link to the video of you project, or none
