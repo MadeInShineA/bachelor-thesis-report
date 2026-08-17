@@ -1,4 +1,4 @@
-#import "@preview/isc-hei-bthesis:0.8.0": *
+#import "@preview/isc-hei-bthesis:0.8.1": *
 #import "@preview/acrostiche:0.7.0": *
 
 // Get the proper title for acknowledgements if not written in English
