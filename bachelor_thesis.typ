@@ -89,11 +89,11 @@ In the context of multi-site studies and clinical applications, where reproducib
 
 The goal of this bachelor thesis, conducted in collaboration with the #link("https://www.atr.jp/index.html", acr("ATR")), is to investigate the numerical stability of #acr("fMRI") connectivity biomarkers. This work was divided into three complementary parts.
 
-First, the objective was to reproduce the results of Alizadeh et al., 2026 #super[@Alizadeh2025.12.22.695524], which examined how numerical variability affects the sample size required for statistical significance and the stability of #acr("FC") matrix graph metrics using the #acr("NPVR") metric.
+First, the objective was to reproduce the results of Alizadeh et al., 2026 #super[@Alizadeh2025.12.22.695524], which examined how numerical variability affects the sample size required for statistical significance and the stability of #acr("FC") matrix graph metrics using the #acr("NPVR") metric, on a different multi-site dataset and using 15 confounds instead of 6.
 
-Second, the focus shifted to the numerical stability of the #acr("FC") matrices themselves, rather than their derived graph metrics, providing edge-wise stability analysis.
+Second, the focus shifted to the numerical stability of the #acr("FC") matrices themselves, rather than their derived graph metrics, providing edge-wise stability analysis with and without global signal regression.
 
-Finally, the numerical stability of a feature extraction method based on #link("https://en.wikipedia.org/wiki/Principal_component_analysis")[#acr("PCA")] was assessed, building on the work of Yamashita et al., 2026 #super[#cite(label("10.1162/IMAG.a.1121"))]. This method extracts #acr("FC") biomarkers robust to different sites and datasets. The stability assessment involved perturbing the correlation coefficient computation (```Python np.corrcoef```) and forcing the #acr("PCA") to use 32-bit floating-point inputs rather than 64-bit.
+Finally, the numerical stability of a feature extraction method based on #link("https://en.wikipedia.org/wiki/Principal_component_analysis")[#acr("PCA")] was assessed, building on the work of Yamashita et al., 2026 #super[#cite(label("10.1162/IMAG.a.1121"))]. This method extracts #acr("FC") biomarkers and was originally validated on the #link("https://bicr-resource.atr.jp/srpbsopen/", "SRPB") Tanaka et al., 2021 #super[@Tanaka2021] dataset. Since this dataset was split into validation and discovery, whether it generalizes to entirely different datasets is still unknown. The assessment involved reproducing the method on the complete SRPB and #link("https://mridata-brainminds-beyond.atr.jp/dataset/bmbpt/", "BMB") Koike et al., 2021 #super[@KOIKE2021102600] datasets to evaluate its generalizability. The pipeline's robustness to numerical perturbations was then assessed by perturbing two steps, namely the correlation coefficient computation (```Python np.corrcoef```) using #acr("MCA") and the #acr("PCA") dimensionality reduction by forcing 32-bit floating-point inputs rather than 64-bit.
 
 
 = State of the Art
@@ -102,7 +102,7 @@ In recent years, different tools have been created to help the assessment of num
 
 These tools rely on #acr("MCA") Parker et al., 1997 #super[@Parker1997MonteCA], a technique that introduces controlled random perturbations to floating-point operations during program execution. By repeatedly running the same pipeline with #acr("MCA") instrumentation, researchers can quantify how numerical variability propagates through computational workflows.
 
-Using these tools, the impact of numerical variability has been investigated across several neuroimaging domains such as functional, structural and diffusion imaging. As introduced in @intro, Alizadeh et al., 2026 #super[@Alizadeh2025.12.22.695524] evaluated the numerical variability of different graph measures derived from the #acr("FC") matrices resulting from the widely used #link("https://fmriprep.org/en/stable/", "fMRIPrep") Esteban et al., 2019 #super[@fMRIPrep] preprocessing pipeline. Using the #acr("NPVR") metric, they obtained values ranging from 0.1 to 0.2 for most graph metrics. These results were found to vary across brain regions, #acr("FC") thresholds and confound regression strategies.
+Using these tools, the impact of numerical variability has been investigated across several neuroimaging domains such as functional, structural and diffusion imaging. As introduced in @intro, Alizadeh et al., 2026 #super[@Alizadeh2025.12.22.695524] evaluated the numerical variability of different graph measures derived from the #acr("FC") matrices resulting from the widely used #link("https://fmriprep.org/en/stable/", "fMRIPrep") Esteban et al., 2019 #super[@fMRIPrep] preprocessing pipeline. Using the #acr("NPVR") metric, they obtained values ranging from 0.1 to 0.2 for most graph metrics. These results were found to vary across brain regions, #acr("FC") thresholds, and confound assessment, comparing six motion confounds (translations and rotations) against no confounds.
 
 In structural imaging pipelines, Mirhakimi et al., 2025 #super[@mirhakimi2025numericaluncertaintylinearregistration] investigated numerical uncertainty in linear registration algorithms, demonstrating that small floating-point variations can lead to measurable differences in image alignment. Similarly, Chatelain et al., 2026 #super[@Chatelain2026.01.09.698203] quantified the impact of numerical variability on structural #acr("MRI") measures in Parkinson's disease, finding that numerical variation reached nearly one-third of population variability in multiple cortical and subcortical regions.
 
@@ -117,7 +117,7 @@ However, these stability conclusions cannot be generalized across pipelines due 
 
 = Development and Methodology <methodology>
 
-This section describes the development process and methodology underlying this thesis. Beyond the thesis-specific code, this work included contributions to external repositories via #acrpl("PR"), enhancements to Yamashita et al.'s #link("https://github.com/Ayumu722/pca-based-feature-extraction")[PCA-based feature extraction package], and a correction to the #acr("NPVR") simulation in Alizadeh et al. 2026's #link("https://github.com/mina94az/Numerical-Variability-of-functional-MRI-Graph-Measures")[GitHub repository].
+The development process and methodology underlying this thesis are described below. Beyond the thesis-specific code, this work included contributions to external repositories via #acrpl("PR"), enhancements to Yamashita et al.'s #link("https://github.com/Ayumu722/pca-based-feature-extraction")[PCA-based feature extraction package], and a correction to the #acr("NPVR") simulation in Alizadeh et al. 2026's #link("https://github.com/mina94az/Numerical-Variability-of-functional-MRI-Graph-Measures")[GitHub repository].
 
 == Code availability
 
@@ -131,7 +131,7 @@ The development environment is managed via #link("https://nixos.org/", "Nix") an
 
 == Reproduction of Alizadeh et al., 2026
 
-This section details the reproduction of the two distinct analyses presented in Alizadeh et al., 2026 #super[@Alizadeh2025.12.22.695524]. The original code can be found #link("https://github.com/mina94az/Numerical-Variability-of-functional-MRI-Graph-Measures", "on GitHub"), and before starting the reproduction, a comprehensive summary of the paper was created to ensure a thorough understanding of the methodology, preprocessing pipeline, and graph metrics which is accessible #link("https://github.com/MadeInShineA/bachelor-thesis-project/tree/main/resources/alizadeh-2025-paper-summary", "here"). The first analysis involved implementing #acr("NPVR") calculation on simulated data to assess how #acr("NPVR") variation influences the sample size required for Cohen's $d$ coefficient. The second analysis used perturbed fMRIPrep outputs to evaluate #acr("NPVR") variation across different graph metrics, thresholds, and brain regions.
+The reproduction of the two distinct analyses presented in Alizadeh et al., 2026 #super[@Alizadeh2025.12.22.695524] is detailed here. The original code can be found #link("https://github.com/mina94az/Numerical-Variability-of-functional-MRI-Graph-Measures", "on GitHub"), and before starting the reproduction, a comprehensive summary of the paper was created to ensure a thorough understanding of the methodology, preprocessing pipeline, and graph metrics which is accessible #link("https://github.com/MadeInShineA/bachelor-thesis-project/tree/main/resources/alizadeh-2025-paper-summary", "here"). The first analysis involved implementing #acr("NPVR") calculation on simulated data to assess how #acr("NPVR") variation influences the sample size required for Cohen's $d$ coefficient. The second analysis used perturbed fMRIPrep outputs to evaluate #acr("NPVR") variation across different graph metrics, thresholds, and brain regions.
 
 === NPVR Simulation <npvr-simulation>
 
@@ -148,7 +148,7 @@ The notebook code developed for this step and its outputs are available as a #li
 
 This reproduction step involved several changes to the original procedure.
 First, a custom #link("https://hub.docker.com/r/madeinshinea/fuzzy-fmriprep", "Docker container") was created to perturb the latest version of fMRIPrep (25.2.5) instead of using the existing Fuzzy container, which used an older fMRIPrep version (23.2.1).
-Second, the #acr("fMRI") data used for this section was provided by the #acr("ATR") and originates from a multi-site dataset Koike et al., 2021 #super[@KOIKE2021102600,] rather than the #link("https://www.ppmi-info.org/access-data-specimens/download-data", "publicly available PPMI dataset") that was originally used.
+Second, the #acr("fMRI") data used for this section was provided by the #acr("ATR") and originates from the #link("https://mridata-brainminds-beyond.atr.jp/dataset/bmbpt/", "BMB dataset") #super[@KOIKE2021102600] rather than the #link("https://www.ppmi-info.org/access-data-specimens/download-data", "publicly available PPMI dataset") that was originally used.
 Third, when extracting the #acr("FC") matrices, the original paper used six confound regressors corresponding to the main motion parameters (translations and rotations). However, as the data used in this work appeared to be noisier, nine additional confounds were included following the recommendation of Dr. Yamashita: global signal, CSF, white matter, and six aCompCor components (`a_comp_cor_00` through `a_comp_cor_05`).
 Fourth, due to computational constraints, the small-worldness graph metric was excluded from the analysis.
 Finally, how the #acr("NPVR") is calculated based on the outputs of the different fMRIPrep runs was modified. In the original paper, they had the same number of runs per subject and the #acr("NPVR") was calculated as follows:
@@ -200,7 +200,7 @@ The notebook code developed for this step and its outputs are available as a #li
 
 Reusing the perturbed fMRIPrep runs from @graph-section, this section extends the analysis from graph-level metrics to individual edges of the #acr("FC") matrices. The pooled #acr("NPVR") was computed independently for each of the 4950 edges (upper triangle of the 100x100 matrix) using the same formula as before.
 
-Two confound strategies were compared: the full set of 15 confounds and a filtered set excluding only the global signal. The global signal regression remains a debated practice in the neuroimaging community, as it may remove both nuisance signals and neural activity of interest Xu et al., 2018 #super[@xu2018], Xifra-Porxas et al., 2025 #super[@xifra2025]. To quantify its impact on edge-wise numerical stability, a delta #acr("NPVR") was computed for each edge as the difference between the two confound strategies.
+Two confound strategies were compared: the full set of 15 confounds and a filtered set excluding only the global signal. The global signal regression remains a debated practice in the neuroimaging community, as it may remove both nuisance signals and neural activity of interest Xu et al., 2018 #super[@xu2018] and Xifra-Porxas et al., 2025 #super[@xifra2025]. To quantify its impact on edge-wise numerical stability, a delta #acr("NPVR") was computed for each edge as the difference between the two confound strategies.
 
 The edge-wise #acr("NPVR") values were visualized as connectivity matrices, scatter plots, and histograms. To assess spatial patterns, edge-wise values were aggregated per brain region by computing the mean and median #acr("NPVR") across all connected edges and mapped onto the Schaefer 2018 atlas.
 
@@ -208,7 +208,7 @@ The edge-wise #acr("NPVR") values were visualized as connectivity matrices, scat
 
 A browsable version of the analysis notebook is available #link("https://olivier.amacker.dev/bachelor-thesis/site/notebooks/fuzzy-pca-dim-reduction-analysis.html", "online").
 
-This section had three objectives. First, reproduce the #acr("PCA")-based feature extraction method developed by Yamashita et al., 2026 #super[#cite(label("10.1162/IMAG.a.1121"))] on the complete #link("https://bicr-resource.atr.jp/srpbsopen/", "SRPB dataset") #super[@Tanaka2021], as opposed to the original paper which split the data into discovery and validation sets. Second, apply the same method to the complete #link("https://mridata-brainminds-beyond.atr.jp/dataset/bmbpt/", "BMB dataset") #super[@KOIKE2021102600]. Third, perturb different steps of the pipeline: the correlation computation using a #link("https://hub.docker.com/layers/verificarlo/fuzzy/v2.0.0-lapack-python3.8.5-numpy-scipy-sklearn/images/sha256-993543dcfc0f40aa5cd2de404b5dccdaeea5673c7fabd39505f47ac5da6eb466", [#acr("MCA")-instrumented Docker container]) and the #acr("PCA") dimensionality reduction by forcing 32-bit floating-point inputs instead of the standard 64-bit precision.
+This section had three objectives. First, reproduce the #acr("PCA")-based feature extraction method developed by Yamashita et al., 2026 #super[#cite(label("10.1162/IMAG.a.1121"))] on the complete #link("https://bicr-resource.atr.jp/srpbsopen/", "SRPB dataset") #super[@Tanaka2021], as opposed to the original paper which split the data into discovery and validation sets. Second, apply the same method to the complete #link("https://mridata-brainminds-beyond.atr.jp/dataset/bmbpt/", "BMB dataset") #super[@KOIKE2021102600]. Third, perturb different steps of the pipeline, namely the correlation computation using a #link("https://hub.docker.com/layers/verificarlo/fuzzy/v2.0.0-lapack-python3.8.5-numpy-scipy-sklearn/images/sha256-993543dcfc0f40aa5cd2de404b5dccdaeea5673c7fabd39505f47ac5da6eb466", [#acr("MCA")-instrumented Docker container]) and the #acr("PCA") dimensionality reduction by forcing 32-bit floating-point inputs instead of the standard 64-bit precision, to assess their effect on the output.
 
 #pagebreak()
 
@@ -265,7 +265,7 @@ Additionally, the #acr("PCA") feature extraction step was also perturbed by usin
 
 = Results and Discussion
 
-This section showcases the results of the three complementary analyses described in @methodology and discusses their implications. First, the reproduction of Alizadeh et al., 2026 #super[@Alizadeh2025.12.22.695524] graph metrics assessment evaluates how numerical variability affects downstream graph measures. Second, the edge-wise #acr("FC") analysis quantifies numerical noise at the level of individual correlations before any graph construction. Third, the stability of the #acr("PCA")-based feature extraction pipeline is assessed under perturbations of both correlation computation and precision reduction.
+The results of the three complementary analyses described in @methodology are presented and discussed. The reproduction of Alizadeh et al., 2026 evaluates how numerical variability affects downstream graph measures. The edge-wise #acr("FC") analysis quantifies numerical noise at the level of individual correlations before any graph construction. The stability of the #acr("PCA")-based feature extraction pipeline is assessed under perturbations of both correlation computation and precision reduction.
 
 == Reproduction of Alizadeh et al., 2026
 
@@ -444,7 +444,7 @@ The edge-wise analysis revealed substantial numerical variability across the #ac
 
 == PCA-based Feature Extraction Stability
 
-This section presents the results of the #acr("PCA")-based feature extraction pipeline. First, the extraction is applied to both the SRPB and BMB datasets and compared against the findings of Yamashita et al., 2026 #super[#cite(label("10.1162/IMAG.a.1121"))]. The combined impact of numerical noise introduced during #acr("FC") matrix extraction and reduced input precision for the #acr("PCA") on the extracted features is then assessed.
+The results of the PCA-based feature extraction pipeline are presented as follows. Applying the extraction to both the SRPB and BMB datasets compared against the findings of Yamashita et al., 2026 #super[#cite(label("10.1162/IMAG.a.1121"))] constituted the first part. The second part assessed the combined impact of numerical noise introduced during #acr("FC") matrix extraction and reduced input precision for the #acr("PCA") on the extracted features.
 
 === Reproduction on the SRPB and BMB Datasets
 
