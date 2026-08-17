@@ -4,6 +4,8 @@
 // Get the proper title for acknowledgements if not written in English
 #page-title(context i18n(inc.global-language.get(), "acknowledgements"))
 
+#reset-all-acronyms()
+
 #v(1fr)
 
 I want to thank the following people and institution which played a huge role in making this bachelor thesis possible:

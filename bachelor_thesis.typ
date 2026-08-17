@@ -11,7 +11,7 @@
   authors: "Olivier Amacker",
   language: doc_language, // must be defined globally, see above
 
-  signature: image("figs/signature.png", height: 40pt),
+  signature: image("figs/signature.png", height: 20pt),
 
   thesis-supervisor: "Prof. Dr Oscar Esteban",
   thesis-co-supervisor: "Dr Okito Yamashita", // Optional, use none if not needed
@@ -117,11 +117,11 @@ However, these stability conclusions cannot be generalized across pipelines due 
 
 = Development and Methodology <methodology>
 
-The development process and methodology underlying this thesis are described below. Beyond the thesis-specific code, this work included contributions to external repositories via #acrpl("PR"), enhancements to Yamashita et al.'s #link("https://github.com/Ayumu722/pca-based-feature-extraction")[PCA-based feature extraction package], and a correction to the #acr("NPVR") simulation in Alizadeh et al. 2026's #link("https://github.com/mina94az/Numerical-Variability-of-functional-MRI-Graph-Measures")[GitHub repository].
+The development process and methodology underlying this thesis are described below. Beyond the thesis-specific code, this work included contributions to external repositories via #acrpl("PR"), enhancements to Yamashita et al., 2026's #link("https://github.com/Ayumu722/pca-based-feature-extraction")[PCA-based feature extraction package], and a correction to the #acr("NPVR") simulation in Alizadeh et al., 2026's #link("https://github.com/mina94az/Numerical-Variability-of-functional-MRI-Graph-Measures")[GitHub repository].
 
 == Code availability
 
-The code developed during this bachelor thesis is publicly available on #link("https://github.com/madeinshinea/bachelor-thesis", "GitHub"). The repository is organized using #link("https://git-scm.com/book/en/v2/Git-Tools-Submodules", "git submodules") to separate concerns: the `bachelor-thesis-report` submodule contains this #link("https://typst.app/", "Typst") report, while the `bachelor-thesis-project` submodule contains all analysis code, including preprocessing pipelines, analysis notebooks, and job submission scripts for the #acr("ATR") #link("https://en.wikipedia.org/wiki/High-performance_computing", acr("HPC")) cluster.
+The code developed during this bachelor thesis is publicly available on #link("https://github.com/madeinshinea/bachelor-thesis", "GitHub"). The repository is organized using #link("https://git-scm.com/book/en/v2/Git-Tools-Submodules", "git submodules") to separate concerns, the `bachelor-thesis-report` submodule contains this #link("https://typst.app/", "Typst") report, while the `bachelor-thesis-project` submodule contains all analysis code, including preprocessing pipelines, analysis notebooks, and job submission scripts for the #acr("ATR") #link("https://en.wikipedia.org/wiki/High-performance_computing", acr("HPC")) cluster.
 
 An interactive project website is available at #link("https://olivier.amacker.dev/bachelor-thesis")[olivier.amacker.dev/bachelor-thesis], providing browsable access to the four analysis notebooks developed with #link("https://marimo.io/", "Marimo") and their respective outputs, a daily journal documenting the project's progress, and the different presentations delivered during the thesis.
 
@@ -131,27 +131,26 @@ The development environment is managed via #link("https://nixos.org/", "Nix") an
 
 == Reproduction of Alizadeh et al., 2026
 
-The reproduction of the two distinct analyses presented in Alizadeh et al., 2026 #super[@Alizadeh2025.12.22.695524] is detailed here. The original code can be found #link("https://github.com/mina94az/Numerical-Variability-of-functional-MRI-Graph-Measures", "on GitHub"), and before starting the reproduction, a comprehensive summary of the paper was created to ensure a thorough understanding of the methodology, preprocessing pipeline, and graph metrics which is accessible #link("https://github.com/MadeInShineA/bachelor-thesis-project/tree/main/resources/alizadeh-2025-paper-summary", "here"). The first analysis involved implementing #acr("NPVR") calculation on simulated data to assess how #acr("NPVR") variation influences the sample size required for Cohen's $d$ coefficient. The second analysis used perturbed fMRIPrep outputs to evaluate #acr("NPVR") variation across different graph metrics, thresholds, and brain regions.
+The reproduction of the two distinct analyses presented in Alizadeh et al., 2026 #super[@Alizadeh2025.12.22.695524] is detailed here. The original code can be found #link("https://github.com/mina94az/Numerical-Variability-of-functional-MRI-Graph-Measures", "on GitHub"), and before starting the reproduction, a comprehensive summary of the paper was created to ensure a thorough understanding of the methodology, preprocessing pipeline, and graph metrics which is accessible #link("https://github.com/MadeInShineA/bachelor-thesis-project/tree/main/resources/alizadeh-2025-paper-summary", "here"). The first analysis involved implementing #acr("NPVR") calculation on simulated data to assess how its variation influences the sample size required for Cohen's $d$ coefficient. The second analysis used perturbed fMRIPrep outputs to evaluate #acr("NPVR") variation across different graph metrics, thresholds, and brain regions.
 
 === NPVR Simulation <npvr-simulation>
 
-An interactive notebook for this simulation can be accessed #link("https://olivier.amacker.dev/bachelor-thesis/site/notebooks/npvr-simulation/", "online"), as it doesn't rely on any external data.
+An interactive notebook for this simulation can be accessed #link("https://olivier.amacker.dev/bachelor-thesis/site/notebooks/npvr-simulation/", "online"), as it doesn't rely on any external data. The notebook runs entirely in the browser via Marimo's #link("https://docs.marimo.io/guides/exporting/webassembly_html/", "WebAssembly HTML export"), allowing the code to be modified and re-executed on the spot.
 
-The simulation begins by generating two synthetic populations using normal distributions with the same means but different standard deviations: $sigma = 0.1$ for the low variability group and $sigma = 0.4$ for the high variability group. For each population, the #acr("NPVR") is calculated using the formula $text("NPVR") = sigma_"num" / sigma_"pop"$, where $sigma_"num"$ represents the numerical variability and $sigma_"pop"$ the population variability. The populations are then visualized in the $sigma_"num"$ / $sigma_"pop"$ space to assess their relative positions on #acr("NPVR") contour lines. Finally, the relationship between #acr("NPVR"), sample size, and Cohen's $d$ variations is visualized to assess how numerical noise propagates into statistical inference.
+The simulation begins by generating two synthetic populations using normal distributions with the same means but different standard deviations: $sigma = 0.1$ for the low variability group and $sigma = 0.4$ for the high variability one. For each population, the #acr("NPVR") is calculated using the formula $text("NPVR") = sigma_"num" / sigma_"pop"$, where $sigma_"num"$ represents the numerical variability and $sigma_"pop"$ the population variability. The populations are then visualized in the $sigma_"num"$ / $sigma_"pop"$ space to assess their relative positions on #acr("NPVR") contour lines. Finally, the relationship between #acr("NPVR"), sample size, and Cohen's $d$ variations is visualized to assess how numerical noise propagates into statistical inference.
 
-During this reproduction, the original source code was reviewed and an error was identified. The #acr("NPVR") values in the final visualization were hardcoded to `0.287` and `0.496` rather than computed from the generated distributions. This bug was fixed through a #link("https://github.com/mina94az/Numerical-Variability-of-functional-MRI-Graph-Measures/pull/3", acr("PR")) that was merged into the original repository.
+During this reproduction, the original source code was reviewed and an error was identified. The #acr("NPVR") values in the final visualization were hardcoded to $0.287$ and $0.496$ rather than computed from the generated distributions. This bug was fixed through a #link("https://github.com/mina94az/Numerical-Variability-of-functional-MRI-Graph-Measures/pull/3", acr("PR")) that was merged into the original repository.
 
 === Graph Metrics Stability Assessment <graph-section>
 
-The notebook code developed for this step and its outputs are available as a #link("https://olivier.amacker.dev/bachelor-thesis/site/notebooks/fuzzy-fmriprep-graph-metrics-analysis.html", "static HTML page").
-
+The notebook code developed for this step and its outputs are available as a #link("https://olivier.amacker.dev/bachelor-thesis/site/notebooks/fuzzy-fmriprep-graph-metrics-analysis.html", "static HTML page"), as it relies on preprocessed fMRIPrep outputs.
 
 This reproduction step involved several changes to the original procedure.
 First, a custom #link("https://hub.docker.com/r/madeinshinea/fuzzy-fmriprep", "Docker container") was created to perturb the latest version of fMRIPrep (25.2.5) instead of using the existing Fuzzy container, which used an older fMRIPrep version (23.2.1).
-Second, the #acr("fMRI") data used for this section was provided by the #acr("ATR") and originates from the #link("https://mridata-brainminds-beyond.atr.jp/dataset/bmbpt/", "BMB dataset") #super[@KOIKE2021102600] rather than the #link("https://www.ppmi-info.org/access-data-specimens/download-data", "publicly available PPMI dataset") that was originally used.
+Second, the #acr("fMRI") data used for this section was provided by the #acr("ATR") and originates from the #link("https://mridata-brainminds-beyond.atr.jp/dataset/bmbpt/", "BMB dataset") #super[@KOIKE2021102600] rather than the publicly available  #link("https://www.ppmi-info.org/access-data-specimens/download-data", "PPMI dataset") Marek et al., 2018 #super[@marek2018] that was originally used.
 Third, when extracting the #acr("FC") matrices, the original paper used six confound regressors corresponding to the main motion parameters (translations and rotations). However, as the data used in this work appeared to be noisier, nine additional confounds were included following the recommendation of Dr. Yamashita: global signal, CSF, white matter, and six aCompCor components (`a_comp_cor_00` through `a_comp_cor_05`).
 Fourth, due to computational constraints, the small-worldness graph metric was excluded from the analysis.
-Finally, how the #acr("NPVR") is calculated based on the outputs of the different fMRIPrep runs was modified. In the original paper, they had the same number of runs per subject and the #acr("NPVR") was calculated as follows:
+Finally, how the #acr("NPVR") is calculated based on the outputs of the different fMRIPrep runs was modified. In the original paper, they had the same number of runs per subject. The NPVR was calculated using the following numerical and population variance formulas:
 
 #pagebreak()
 
@@ -169,7 +168,7 @@ $$$
 
 where $n$ is the number of MCA repetitions, $m$ is the number of subjects, and $x_(i,j)$ is the metric value for subject $j$ in MCA run $i$.
 
-Initially, some preprocessing runs failed, resulting in varying numbers of MCA runs per subject. However, after rerunning the failed subjects, the final dataset contained 5 subjects with 5 fuzzy fMRIPrep runs each. Although the final dataset was balanced, the pooled approach was retained to handle potential missing data robustly. The pooled numerical variance accounts for the varying number of runs per subject:
+Each FC matrix was generated using 5 fuzzy fMRIPrep runs. However, the subjects did not have the same number of FC matrices as some had multiple sessions, yielding a total of 120 perturbed FC matrices before applying the two confound strategies (with and without). Since this design differed from the original formulation, the numerical and population variance calculations were modified using a pooled approach to account for the varying number of runs per subject:
 
 $$$
 sigma_"num pooled"^2(r) = 1/(sum_(j=1)^m (n_j - 1)) sum_(j=1)^m (n_j - 1) [1/(n_j - 1) sum_(i in Omega_j) (x_(i,j)(r) - x-bar_(".,j")(r))^2]
@@ -181,24 +180,24 @@ $$$
 sigma_"pop pooled"^2(r) = 1/(sum_(i=1)^n (m_i - 1)) sum_(i=1)^n (m_i - 1) [1/(m_i - 1) sum_(j in Omega_i) (x_(i,j)(r) - x-bar_(i,".")(r))^2]
 $$$
 
-The pooled #acr("NPVR") for each region $r$ is then:
+The pooled #acr("NPVR") for each region $r$ is then defined as:
 
 $$$
 text("NPVR")_"pooled"(r) = sigma_"num pooled"(r) / sigma_"pop pooled"(r)
 $$$
 
-where $n_j$ is the number of runs for subject $j$, $m_i$ is the number of subjects in MCA run $i$, and $Omega_j$ and $Omega_i$ denote the sets of valid indices for subject $j$ and run $i$, respectively.
+where $n_j$ is the number of runs for subject $j$, $m_i$ is the number of subjects in each #acr("MCA") run $i$, $Omega_j$ and $Omega_i$ denote the sets of valid indices for subject $j$ and run $i$, respectively.
 
-This approach ensures that all available data contributes to the variability estimates, even if some runs are missing.
+This approach ensures that all available data contributes equally to the variability estimates, even when subjects have different numbers of runs.
 
-The remaining analysis followed the same procedure as the original study. After fMRIPrep preprocessing, the Schaefer 2018 parcellation #super[@Schaefer2018] with 100 cortical regions and 7 functional networks was used to extract regional time series using #link("https://nilearn.github.io", "Nilearn")'s NiftiLabelsMasker. Spatial smoothing of 6mm #link("https://en.wikipedia.org/wiki/Full_width_at_half_maximum", acr("FWHM")), temporal standardization, and detrending were applied during masking. The #acr("FC") matrices were computed as Pearson #link("https://en.wikipedia.org/wiki/Correlation_matrix", "correlation matrices") using Nilearn's ConnectivityMeasure, with both with-confound and without-confound versions generated. The matrices were thresholded using absolute correlation values at six thresholds: 0.05, 0.1, 0.2, 0.3, 0.4, and 0.5, retaining both strongly positive and strongly negative correlations. For each threshold, four local graph metrics were computed using #link("https://networkx.org", "NetworkX"): degree centrality, clustering coefficient, betweenness centrality, and eigenvector centrality. Additionally, one global metric was calculated: average shortest path length. The #acr("NPVR") was then computed for each metric and threshold. For visualization purposes, these values were normalized and plotted across brain regions by projecting regional values onto the Schaefer 2018 atlas to assess spatial variability in numerical stability. Furthermore, the #acr("NPVR") was computed on the difference between with-confound and without-confound matrices to assess the impact of confound regression, following the approach of the original study.
+The remaining analysis followed the same procedure as the original study. After fMRIPrep preprocessing, regional time series were extracted using the Schaefer 2018 parcellation #super[@Schaefer2018] with 100 cortical regions and 7 functional networks via #link("https://nilearn.github.io", "Nilearn")'s NiftiLabelsMasker. Spatial smoothing (6mm #link("https://en.wikipedia.org/wiki/Full_width_at_half_maximum", acr("FWHM"))), temporal standardization, and detrending were applied during masking. The #acr("FC") matrices were computed as Pearson #link("https://en.wikipedia.org/wiki/Correlation_matrix", "correlation matrices") using Nilearn's ConnectivityMeasure, with both with-confound and without-confound versions generated. Matrices were thresholded at six absolute correlation values: 0.05, 0.1, 0.2, 0.3, 0.4, and 0.5. For each threshold, four local graph metrics were computed using #link("https://networkx.org", "NetworkX"): degree centrality, clustering coefficient, betweenness centrality, and eigenvector centrality, plus one global metric: average shortest path length. The #acr("NPVR") was then computed for each metric and threshold. For visualization, regional #acr("NPVR") values were projected onto the Schaefer 2018 atlas to assess spatial variability in numerical stability. Finally, the #acr("NPVR") was computed on the difference between with-confound and without-confound matrices to assess the impact of confound regression, following the original approach.
 
 
 == Edge-wise FC Matrix Stability Analysis <fc-matrices-analyses>
 
-The notebook code developed for this step and its outputs are available as a #link("https://olivier.amacker.dev/bachelor-thesis/site/notebooks/fuzzy-fmriprep-fc-matrices-analysis.html", "static HTML page").
+A static HTML version of the analysis notebook, including both code and outputs, is available #link("https://olivier.amacker.dev/bachelor-thesis/site/notebooks/fuzzy-fmriprep-fc-matrices-analysis.html", "here").
 
-Reusing the perturbed fMRIPrep runs from @graph-section, this section extends the analysis from graph-level metrics to individual edges of the #acr("FC") matrices. The pooled #acr("NPVR") was computed independently for each of the 4950 edges (upper triangle of the 100x100 matrix) using the same formula as before.
+This analysis reuses the perturbed fMRIPrep runs from @graph-section and extends it from graph-level metrics to individual edges of the #acr("FC") matrices. The pooled #acr("NPVR") was computed independently for each of the 4950 edges (upper triangle of the 100×100 matrix) using the same formula.
 
 Two confound strategies were compared: the full set of 15 confounds and a filtered set excluding only the global signal. The global signal regression remains a debated practice in the neuroimaging community, as it may remove both nuisance signals and neural activity of interest Xu et al., 2018 #super[@xu2018] and Xifra-Porxas et al., 2025 #super[@xifra2025]. To quantify its impact on edge-wise numerical stability, a delta #acr("NPVR") was computed for each edge as the difference between the two confound strategies.
 
@@ -269,7 +268,7 @@ The results of the three complementary analyses described in @methodology are pr
 
 == Reproduction of Alizadeh et al., 2026
 
-This part reproduced both analyses of Alizadeh et al., 2026 #super[@Alizadeh2025.12.22.695524]. The NPVR simulation on synthetic data (@npvr-simulation) was reimplemented to verify how numerical variability propagates into statistical inference. The graph metrics assessment (@graph-section) was then rerun on fMRIPrep-preprocessed data from a different multi-site dataset, in order to test whether the original numerical stability findings generalize to other data sources.
+This part reproduced both analyses of Alizadeh et al., 2026 #super[@Alizadeh2025.12.22.695524]. The #acr("NPVR") simulation on synthetic data (@npvr-simulation) was reimplemented to verify how numerical variability propagates into statistical inference. The graph metrics assessment (@graph-section) was then rerun on fMRIPrep-preprocessed data from a different multi-site dataset, in order to test whether the original numerical stability findings generalize to other data sources.
 
 === NPVR Simulation
 
@@ -444,7 +443,7 @@ The edge-wise analysis revealed substantial numerical variability across the #ac
 
 == PCA-based Feature Extraction Stability
 
-The results of the PCA-based feature extraction pipeline are presented as follows. Applying the extraction to both the SRPB and BMB datasets compared against the findings of Yamashita et al., 2026 #super[#cite(label("10.1162/IMAG.a.1121"))] constituted the first part. The second part assessed the combined impact of numerical noise introduced during #acr("FC") matrix extraction and reduced input precision for the #acr("PCA") on the extracted features.
+The results of the #acr("PCA")-based feature extraction pipeline are presented as follows. Applying the extraction to both the SRPB and BMB datasets compared against the findings of Yamashita et al., 2026 #super[#cite(label("10.1162/IMAG.a.1121"))] constituted the first part. The second part assessed the combined impact of numerical noise introduced during #acr("FC") matrix extraction and reduced input precision for the #acr("PCA") on the extracted features.
 
 === Reproduction on the SRPB and BMB Datasets
 
@@ -458,15 +457,15 @@ The results obtained by the original paper already appeared reasonably consisten
       #image("./figs/fuzzy-pca-analysis/original_fc_edges.jpeg", height: 150pt)
     ],
     align(center)[
-      #text(size: 0.8em)[SRPB: Selected FC connections]
+      #text(size: 0.8em)[SRPB: Selected #acr("FC") connections]
       #image("./figs/fuzzy-pca-analysis/srpb_original_fc_plot.png", height: 150pt)
     ],
     align(center)[
-      #text(size: 0.8em)[BMB: Selected FC connections]
+      #text(size: 0.8em)[BMB: Selected #acr("FC") connections]
       #image("./figs/fuzzy-pca-analysis/bmb_original_fc_plot.png", height: 150pt)
     ],
   ),
-  caption: [Selected FC connections for #acr("PC") 2 from the original paper (top) and from the SRPB and BMB datasets (bottom). Red edges indicate over-connectivity in #acr("MDD") relative to healthy controls, blue edges indicate under-connectivity.]
+  caption: [Selected #acr("FC") connections for #acr("PC") 2 from the original paper (top) and from the SRPB and BMB datasets (bottom). Red edges indicate over-connectivity in #acr("MDD") relative to healthy controls, blue edges indicate under-connectivity.]
 ) <fc-edges-comparison>
 
 @fc-edges-comparison compares the original results (top) with those obtained on the SRPB and BMB datasets (bottom). Red edges indicate over-connectivity in #acr("MDD") relative to healthy controls, blue edges indicate under-connectivity. The specific #acr("FC") connections selected by the #acr("PCA") feature extraction differ across all comparisons, whether considering the discovery and validation splits of the original dataset, the complete SRPB and BMB datasets, or each individual dataset against the original splits. However, analyzing the direction of the connectivity differences reveals a consistent pattern: the vast majority of connections show under-connectivity in #acr("MDD") subjects across all datasets. The distribution of these connections across functional networks for both full datasets is detailed in @network-stats-fig. While the original paper highlighted thalamic and motor regions as the primary drivers, our analysis reveals a broader and more variable involvement of prefrontal, motor, and subcortical networks. Although the relative dominance of these networks varies between the SRPB and BMB datasets, their consistent presence across analyses suggests they are key drivers of the identified connectivity patterns.
@@ -513,26 +512,26 @@ As @fuzzy-corrcoef-effect-fig illustrates, the #acr("MCA") perturbation of the `
     columns: (1fr, 1fr),
     gutter: 1em,
     align(center)[
-      #text(size: 0.8em)[SRPB: Original FC connections]
+      #text(size: 0.8em)[SRPB: Original #acr("FC") connections]
       #image("./figs/fuzzy-pca-analysis/srpb_original_fc_plot.png", height: 150pt)
     ],
     align(center)[
-      #text(size: 0.8em)[SRPB: FC consensus (100 runs)]
+      #text(size: 0.8em)[SRPB: #acr("FC") consensus (100 runs)]
       #image("./figs/fuzzy-pca-analysis/srpb_fc_100_consensus.png", height: 150pt)
     ],
     align(center)[
-      #text(size: 0.8em)[BMB: Original FC connections]
+      #text(size: 0.8em)[BMB: Original #acr("FC") connections]
       #image("./figs/fuzzy-pca-analysis/bmb_original_fc_plot.png", height: 150pt)
     ],
     align(center)[
-      #text(size: 0.8em)[BMB: FC consensus (15 runs)]
+      #text(size: 0.8em)[BMB: #acr("FC") consensus (15 runs)]
       #image("./figs/fuzzy-pca-analysis/bmb_fc_100_consensus.png", height: 150pt)
     ],
   ),
   caption: [Comparison of original and consensus #acr("FC") connections for SRPB (top) and BMB (bottom) datasets.]
 ) <fc-consensus-fig>
 
-@fc-consensus-fig displays the selected FC connections using the same color scheme: red for over-connectivity and blue for under-connectivity in #acr("MDD") subjects relative to healthy controls. It compares the original results with the consensus connections retained across all perturbed runs for both the SRPB (100 runs) and BMB (15 runs) datasets. The original and consensus plots are identical, demonstrating that the feature extraction process is entirely robust to the introduced numerical perturbations. This is further supported by examining not only the visual representation of the FC connections, but also the computed network statistics. Both the edges per network (@edge-network-consensus-fig) and the inter-connections (@inter-connections-consensus-fig) remain identical between the original and consensus results.
+@fc-consensus-fig displays the selected #acr("FC") connections using the same color scheme: red for over-connectivity and blue for under-connectivity in #acr("MDD") subjects relative to healthy controls. It compares the original results with the consensus connections retained across all perturbed runs for both the SRPB (100 runs) and BMB (15 runs) datasets. The original and consensus plots are identical, demonstrating that the feature extraction process is entirely robust to the introduced numerical perturbations. This is further supported by examining not only the visual representation of the #acr("FC") connections, but also the computed network statistics. Both the edges per network (@edge-network-consensus-fig) and the inter-connections (@inter-connections-consensus-fig) remain identical between the original and consensus results.
 
 #figure(
   grid(

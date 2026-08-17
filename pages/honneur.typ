@@ -9,6 +9,7 @@
 // NOTE: the declaration *wording* below is a first draft and will be refined.
 //
 #import "@preview/isc-hei-bthesis:0.8.0" : *
+#import "@preview/acrostiche:0.7.0": *
 
 #page-title(context i18n(inc.global-language.get(), "honour-title"))
 
@@ -42,7 +43,7 @@
         [avoir conscience que la transgression des règles ci-dessus peut entraîner des sanctions allant de la note de 1.0 à l'exclusion de la formation, voire au retrait du titre obtenu ;],
         [accepter que mon travail puisse être analysé au moyen d'un logiciel de détection de similitudes ou par tout autre moyen approprié.],
       ),
-      place-date: [Fait à Sion, le #date-str],
+      place-date: [Fait à #acr("ATR"), le #date-str],
       signature-label: [Signature],
       note: [Document inspiré de la Directive 0.3 de l'Université de Lausanne, de la Directive en matière de plagiat des étudiant·e·s de l'Université de Genève, et du formulaire de Déclaration sur l'honneur de l'Université de Neuchâtel.],
     )
@@ -61,7 +62,7 @@
         [that I am aware that breaching the above rules may lead to sanctions ranging from a grade of 1.0 to exclusion from the programme, or even withdrawal of the awarded degree;],
         [that I accept that my work may be analysed using similarity-detection software or by any other appropriate means.],
       ),
-      place-date: [Done in Sion, on #date-str],
+      place-date: [Done in #acr("ATR"), on #date-str],
       signature-label: [Signature],
       note: [Document inspired by Directive 0.3 of the University of Lausanne, by the University of Geneva's student plagiarism directive, and by the University of Neuchâtel's declaration-of-honour form.],
     )
