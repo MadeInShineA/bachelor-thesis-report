@@ -33,33 +33,33 @@
 // ─── Column 1 ────────────────────────────────────────────────────────────────
 
 #isc-card(title: "Context and Motivation")[
-  #acr("fMRI") enables non-invasive observation of brain activity. A key application is #acr("FC") analysis, which constructs connectivity matrices serving as biomarkers for conditions such as #acr("MDD").
+  #acr("fMRI") enables non-invasive observation of brain activity. A key application is #acr("FC") analysis, which extracts matrices encoding undirected graphs of regional signal correlation. #acr("FC") is promised to serve as biomarkers for conditions such as #acr("MDD").
 
-  As pipelines become more computationally intensive, small perturbations from #acr("OS") differences, hardware, and parallelization can propagate and affect results.
+  As pipelines become more computationally intensive, small perturbations from #acr("OS") differences, hardware, and parallelization can propagate and introduce spurious variability and correlation into #acr("FC") results.
 
   #figure(
-    image("figs/os_result_difference.png", height: 13.5cm),
+    image("figs/os_result_difference.png", height: 11.5cm),
     caption: [Same program, different results across operating systems.],
   )
 ]
 
 #isc-card(title: "Methodology")[
-  Monte Carlo Arithmetic via Fuzzy introduces controlled random perturbations to every floating-point operation during fMRIPrep (25.2.5) preprocessing, simulating numerical variability across different computers.
+  Monte Carlo Arithmetic via Fuzzy introduces controlled random perturbations to every floating-point operation during preprocessing steps, simulating numerical variability across different computers.
 
-  The first two analyses reused the perturbed preprocessing outputs:
+  The first two analyses reused the perturbed fMRIPrep 25.2.5's preprocessing outputs:
   + *Graph metrics*: the #acr("NPVR") was used to assess the stability of network summary measures on perturbed FC matrices across thresholds and brain regions (Alizadeh et al., 2026).
   + *Edge-wise #acr("FC")*: #acr("NPVR") was computed for each of the 4,950 edges, and the effect of global signal regression on numerical stability was quantified.
 
   The third analysis perturbed a separate feature extraction pipeline:
-  + *#acr("PCA") biomarkers*: the numerical stability of the #acr("PCA")-based feature extraction method of Yamashita et al., 2026 was assessed by perturbing `np.corrcoef` with MCA and forcing the #acr("PCA") to 32-bit inputs, on SRPB and BMB datasets.
+  3. *#acr("PCA") biomarkers*: the numerical stability of the #acr("PCA")-based feature extraction method of Yamashita et al., 2026 was assessed by perturbing `np.corrcoef` with MCA and forcing the #acr("PCA") to 32-bit inputs, on SRPB and BMB datasets.
 ]
 
 #isc-card(title: "Graph Metrics Reproduction")[
-  Reproduced on a different multi-site dataset furnished by ATR (Kyoto) with more extensive confound regression (15 vs. 6 regressors), the graph metrics displayed broadly similar trends to the original study, but with consistently higher #acr("NPVR") values across all metrics and thresholds.
+  Reproduced on a different multi-site dataset provided by ATR (Kyoto) with more extensive confound regression (15 vs. 6 regressors). Graph metrics displayed broadly similar trends to the original study, but with consistently higher #acr("NPVR") values across all metrics and thresholds.
 
   The confound regression effect was considerably larger and more variable across thresholds than originally reported, with differences spanning a much wider range.
 
-  *Finding:* Graph metrics reproduce similar trends but with higher numerical sensitivity. A more extensive confound regression strategy amplifies variability beyond what was originally reported.
+  *Finding:* Graph metrics follow similar trends to the original study, but with consistently higher #acr("NPVR") across metrics and thresholds. Using more confounds (15 vs. 6) further raises this variability and widens its spread.
 ]
 
 #isc-card(title: "Edge-wise FC Stability")[
@@ -85,7 +85,7 @@
     caption: [Left: edge-wise #acr("NPVR") distribution. Right: delta #acr("NPVR") distribution.],
   )
 
-  *Finding:* Edge-wise stability is uneven; global signal regression reduces numerical variability across most connections.
+  *Finding:* Edge-wise stability is uneven. Global signal regression reduces numerical variability across most connections.
 ]
 
 
@@ -117,7 +117,7 @@
 #isc-card(title: "Key Takeaways")[
   - *Graph metrics* reproduce similar trends but with higher #acr("NPVR") than originally reported; more extensive confound regression (15 vs. 6 regressors) amplifies variability more than originally reported.
   - *Edge-wise #acr("FC")* shows uneven stability (NPVR 0.036–0.297, mean ~0.11). Global signal regression halves variability across most connections, with widespread rather than region-specific reduction.
-  - *#acr("PCA") biomarkers* are completely stable within each dataset (identical connections across all perturbed runs). The same #acr("MDD") under-connectivity pattern generalizes across SRPB and BMB, but regional importance and specific connections vary.
+  - *#acr("PCA") biomarkers* are stable within each dataset (identical connections across all perturbed runs). The same #acr("MDD") under-connectivity pattern generalizes across SRPB and BMB, but regional importance and specific connections vary.
 
   *Open questions*: how do other PCA pipeline steps respond to perturbation, and what is each confound's precise effect on #acr("NPVR")?
 ]
