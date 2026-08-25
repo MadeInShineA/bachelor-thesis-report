@@ -6,7 +6,7 @@
 #let doc_language = "en" // Valid values are en, fr
 
 #show: project.with(
-  title: "Numerical Stability of Functional MRI\n Connectivity Biomarkers", // Your thesis title
+  title: "Numerical Stability of Functional MRI\nConnectivity Biomarkers", // Your thesis title
   subtitle: none, // Optional, use none if not needed
   authors: "Olivier Amacker",
   language: doc_language, // must be defined globally, see above
