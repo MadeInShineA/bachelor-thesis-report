@@ -29,7 +29,7 @@
   keywords: ("medical data science", "fMRI", "fMRIPrep", "numerical stability", "bio-markers", "PCA", "neuroimaging", "MDD"),
   major: "Data engineering", // "Software engineering", "Embedded systems", "Security", "something else"
 
-  date: datetime.today(), // or datetime.today()
+  date: datetime(year: 2026, month: 8, day: 17),
 
   doc-type: "thesis",
   split-chapters: true,
